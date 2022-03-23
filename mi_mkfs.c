@@ -5,22 +5,22 @@
 
 int main(int argc, char **argv) {
 
-    // Comprobaciòn sintaxis correcta
+    // Comprobar si los agumentos son validos
     if (argv[1] == NULL || argv[2] == NULL) {
-        fprintf(stderr,"Parámetros no especificados. Uso: mi_mkfs <nombre_disp> <nbloques>\n");
+        fprintf(stderr,"Los argumentos no son validos. Uso: mi_mkfs <nombre_disp> <nbloques>\n");
         exit(1);
     }
 
     bmount(argv[1]);    // Abrimos el fichero de disco, si no existe se crea
-    unsigned char buffer[BLOCKSIZE];
-    memset(buffer,'\0',BLOCKSIZE);  // Bloque vacìo
+    unsigned char buffer[BLOCKSIZE]; //el buffer de memoria empleado puede ser un array de tipo unsigned char del tamaño de un bloque
+    memset(buffer,'\0',BLOCKSIZE);  // Bloque vacío
 
     unsigned int nbloques = atoi(argv[2]);
     unsigned int ninodos = nbloques / 4;
 
     printf("Creación bloques vacios, ahora escribo\n");
 
-    // Escribimos nbloques vacíos para inicializar el FS
+    // Inicializamos a 0s el fichero empleado como dispositivo virtual
     for(int i = 0; i < nbloques; i++) {
         bwrite(i,buffer);
     }
@@ -28,19 +28,19 @@ int main(int argc, char **argv) {
     printf("Escritura bloques vacíos completada.\n");
 
     //Inicialización de los datos del superbloque
-    initSB(nbloques, ninodos);
+    //initSB(nbloques, ninodos);
     printf("InitSB completado.\n");
     //Inicialización del mapa de bits (todos a 0)
-    initMB();
+    //initMB();
     printf("InitMB completado.\n");
     //Creación de la lista enlazada de inodos
-    initAI();
+    //initAI();
     printf("InitAI completado.\n");
     //Creaciòn del directorio raiz
-    reservar_inodo('d',7);
+    //reservar_inodo('d',7);
     printf("Creación directorio raíz completada.\n");
 
-    bumount();  // Cerramos el fichero
+    bumount();  // Se desmonta el fichero
     printf("FS desmontado.\n");
 
 }

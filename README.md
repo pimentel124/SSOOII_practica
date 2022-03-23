@@ -8,5 +8,6 @@ https://github.com/gianm99/file-system  (mirar branches)
 https://github.com/Zygmut/SSOO-II
 
 
+path
 
-
+cd  /mnt/c/Users/alvar/Documents/GitHub/SSOOII_practica
