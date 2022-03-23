@@ -31,14 +31,14 @@ struct superbloque {
 };
 
 struct inodo {     // comprobar que ocupa 128 bytes haciendo un sizeof(inodo)!!!
-   char tipo;     // Tipo ('l':libre, 'd':directorio o 'f':fichero)
-   char permisos; // Permisos (lectura y/o escritura y/o ejecución)
+   unsigned char tipo;     // Tipo ('l':libre, 'd':directorio o 'f':fichero)
+   unsigned char permisos; // Permisos (lectura y/o escritura y/o ejecución)
    /* Por cuestiones internas de alineación de estructuras, si se está utilizando
     un tamaño de palabra de 4 bytes (microprocesadores de 32 bits):
    unsigned char reservado_alineacion1 [2];
    en caso de que la palabra utilizada sea del tamaño de 8 bytes
    (microprocesadores de 64 bits): unsigned char reservado_alineacion1 [6]; */
-   char reservado_alineacion1[6];
+   unsigned char reservado_alineacion1[6];
    time_t atime; // Fecha y hora del último acceso a datos: atime
    time_t mtime; // Fecha y hora de la última modificación de datos: mtime
    time_t ctime; // Fecha y hora de la última modificación del inodo: ctime
@@ -59,13 +59,25 @@ struct inodo {     // comprobar que ocupa 128 bytes haciendo un sizeof(inodo)!!!
    // Hay que restar también lo que ocupen las variables de alineación utilizadas!!!
 };
 
-//////////////////Funciones//////////////////
+
 //Nivel 2
+
+// Calcula el tamaño en bloques necesario para el mapa de bits
 int tamMB (unsigned int nbloques);
+
+//Calcula el tamaño en bloques del array de inodos
 int tamAI (unsigned int ninodos);
+
+
 int initSB (unsigned int nbloques, unsigned int ninodos);
+
+
 int initMB();
+
+
 int initAI();
+
+
 //Nivel 3
 int escribir_bit(unsigned int nbloque, unsigned int bit);
 unsigned char leer_bit(unsigned int nbloque);

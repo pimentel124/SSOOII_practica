@@ -2,17 +2,17 @@
 
 struct superbloque SB;
 
-// Calcula y devuelve el tamaño del mapa de bits (en bloques)
+// Calcula el tamaño en bloques necesario para el mapa de bits
 int tamMB (unsigned int nbloques) {
   int size = (nbloques / 8) / BLOCKSIZE;
   int resta = (nbloques / 8) % BLOCKSIZE;
   if (resta != 0) {
-    size++;
+    size++; //hemos incrementado en 1 el resultado de la división entera con 1024 porque el módulo no es 0
   }
   return size;
 }
 
-// Calcula y devuelve el tamaño del array de inodos (en bloques)
+//Calcula el tamaño en bloques del array de inodos
 int tamAI (unsigned int ninodos) {
   // int ninodos = nbloques/4; --> El programa mi_mkfs.c le pasará este dato a esta función como parámetro al llamarla
   int size = (ninodos * INODOSIZE) / BLOCKSIZE;
@@ -44,6 +44,12 @@ int initSB (unsigned int nbloques, unsigned int ninodos) {
   return bwrite(posSB, &SB);
 }
 
+
+
+
+
+
+
 // Inicializa el mapa de bits (todos a 0)
 int initMB() {
   unsigned char buffer[BLOCKSIZE];
@@ -53,6 +59,8 @@ int initMB() {
     fprintf(stderr, "Error en ficheros_basico.c initMB() --> %d: %s\n", errno, strerror(errno));
     return -1;
   }
+
+  //El contenido del buffer se escribe en los bloques correspondientes al mapa de bits
   for(size_t i = SB.posPrimerBloqueMB; i <= SB.posUltimoBloqueMB; i++) {
     if (bwrite(i, buffer) == -1) {
       fprintf(stderr, "Error en ficheros_basico.c initMB() --> %d: %s\n", errno, strerror(errno));
@@ -85,7 +93,7 @@ int initMB() {
   return 0;
 }
 
-// Inicializa la lista enlazada de inodos
+// Inicializa la lista enlazada de inodos libres
 int initAI() {
   struct inodo inodos [BLOCKSIZE/INODOSIZE];
   // Leemos superbloque para obtener las posiciones de los datos
