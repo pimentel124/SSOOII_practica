@@ -28,13 +28,13 @@ int main(int argc, char **argv) {
     printf("Escritura bloques vacíos completada.\n");
 
     //Inicialización de los datos del superbloque
-    //initSB(nbloques, ninodos);
+    initSB(nbloques, ninodos);
     printf("InitSB completado.\n");
     //Inicialización del mapa de bits (todos a 0)
-    //initMB();
+    initMB();
     printf("InitMB completado.\n");
     //Creación de la lista enlazada de inodos
-    //initAI();
+    initAI();
     printf("InitAI completado.\n");
     //Creaciòn del directorio raiz
     //reservar_inodo('d',7);
