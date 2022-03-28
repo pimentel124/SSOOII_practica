@@ -91,3 +91,4 @@ int traducir_bloque_inodo(unsigned int ninodo, unsigned int nblogico, char reser
 //Nivel 5
 int liberar_inodo(unsigned int ninodo);
 int liberar_bloques_inodo(unsigned int ninodo, unsigned int nblogico);
+
