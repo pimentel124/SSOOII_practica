@@ -492,22 +492,35 @@ int traducir_bloque_inodo(unsigned int ninodo, unsigned int nblogico, unsigned c
     return ptr;  // nº de bloque físico correspondiente al bloque de datos lógico, nblogic
 }
 
-//////////////////NIVEL 5//////////////////
+//////////////////NIVEL 6//////////////////
 // Permite liberar un inodo reservado
 int liberar_inodo(unsigned int ninodo) {
+    struct superbloque SB;
     struct inodo inodo;
+    // Leer el inodo
+    if (leer_inodo(ninodo, &inodo) == -1){
+        return -1;
+    }
     // Llamar a la función auxiliar liberar_bloques_inodo() para liberar todos los bloques del inodo
     int bLiberados = liberar_bloques_inodo(ninodo, 0);
     // Leer el inodo actualizado
-    leer_inodo(ninodo, &inodo);
+    if (leer_inodo(ninodo, &inodo) == -1){
+        return -1;
+    }
+//FALTA MUCHO POR HACER
 
     // A la cantidad de bloques ocupados del inodo se le restará
     // la cantidad de bloques liberados por esta función y debería ser 0
     printf("NumBlOcupados es: %d\n", inodo.numBloquesOcupados);
     printf("bLiberados es: %d\n", bLiberados);
+
+
+
+
     if (inodo.numBloquesOcupados - bLiberados == 0) {  // TODO HERE
         // Marcar el inodo como tipo libre
         inodo.tipo = 'l';
+        inodo.tamEnBytesLog = 0;
     } else {
         fprintf(stderr, "Error en ficheros_basico.c liberar_inodo()\n El nùmero de bloques ocupados por el inodo liberado y los bloques liberados no son los mismos! Error --> %d: %s\n", errno, strerror(errno));
         return -1;
