@@ -34,7 +34,7 @@ struct inodo {     // comprobar que ocupa 128 bytes haciendo un sizeof(inodo)!!!
    unsigned char tipo;     // Tipo ('l':libre, 'd':directorio o 'f':fichero)
    unsigned char permisos; // Permisos (lectura y/o escritura y/o ejecución)
    /* Por cuestiones internas de alineación de estructuras, si se está utilizando
-    un tamaño de palabra de 4 bytes (microprocesadores de 32 bits):
+   un tamaño de palabra de 4 bytes (microprocesadores de 32 bits):
    unsigned char reservado_alineacion1 [2];
    en caso de que la palabra utilizada sea del tamaño de 8 bytes
    (microprocesadores de 64 bits): unsigned char reservado_alineacion1 [6]; */
@@ -88,7 +88,6 @@ int leer_inodo(unsigned int ninodo, struct inodo *inodo);
 int reservar_inodo(unsigned char tipo, unsigned char permisos);
 //Nivel 4
 int traducir_bloque_inodo(unsigned int ninodo, unsigned int nblogico, unsigned char reservar);
-//Nivel 5
+//Nivel 6
 int liberar_inodo(unsigned int ninodo);
 int liberar_bloques_inodo(unsigned int ninodo, unsigned int nblogico);
-

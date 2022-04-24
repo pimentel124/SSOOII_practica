@@ -1,13 +1,17 @@
 #include "ficheros.h"
 
-/************************************************** NIVEL 6 **************************************************/
-
-/*
-Escribe el contenido procedente de un buffer de memoria, buf_original, de tamaño nbytes,
-en un fichero/directorio (correspondiente al inodo pasado como argumento, ninodo): le
-indicamos la posición de escritura inicial en bytes lógicos, offset, con respecto al inodo, y
-el número de bytes, nbytes, que hay que escribir.
-*/
+/**
+ * @brief Escribe el contenido procedente de un buffer de memoria, buf_original, de tamaño nbytes,
+ * en un fichero/directorio (correspondiente al inodo pasado como argumento, ninodo): le
+ * indicamos la posición de escritura inicial en bytes lógicos, offset, con respecto al inodo, y
+ * el número de bytes, nbytes, que hay que escribir.
+ * 
+ * @param ninodo        Número de inodo del fichero/directorio
+ * @param buf_original  Buffer de memoria con el contenido a escribir
+ * @param offset        Posición de escritura inicial en bytes lógicos
+ * @param nbytes        Número de bytes a escribir
+ * @return int          Devuelve el nbytes, o -1 en caso de error
+ */
 int mi_write_f(unsigned int ninodo, const void *buf_original, unsigned int offset, unsigned int nbytes) {
     unsigned int primerBL, ultimoBL, desp1, desp2, nbfisico, desp2;
     char buf_bloque[BLOCKSIZE];
@@ -73,11 +77,21 @@ int mi_write_f(unsigned int ninodo, const void *buf_original, unsigned int offse
     }
     return nbytes;
 }
-/*  Lee información de un fichero/directorio (correspondiente al nº de inodo, ninodo, pasado
-como argumento) y la almacena en un buffer de memoria, buf_original: le indicamos la
-posición de lectura inicial offset con respecto al inodo (en bytes) y el número de bytes
-nbytes que hay que leer.
-*/
+
+
+/**
+ * @brief Lee información de un fichero/directorio (correspondiente al nº de inodo, ninodo, pasado
+ * como argumento) y la almacena en un buffer de memoria, buf_original: le indicamos la
+ * posición de lectura inicial offset con respecto al inodo (en bytes) y el número de bytes
+ * nbytes que hay que leer.
+ * 
+ * @param ninodo            Número de inodo del fichero/directorio
+ * @param buf_original      Buffer de memoria donde se almacena la información leída
+ * @param offset            Posición de lectura inicial en bytes lógicos
+ * @param nbytes            Número de bytes a leer
+ * @return int              Devuelve leidos, o -1 en caso de error
+ * 
+ */
 int mi_read_f(unsigned int ninodo, void *buf_original, unsigned int offset, unsigned int nbytes) {
     
     unsigned int primerBL, ultimoBL, desp1, desp2, leidos, desp2;
@@ -151,12 +165,17 @@ int mi_read_f(unsigned int ninodo, void *buf_original, unsigned int offset, unsi
     return leidos;
 }
 
-/* 
-Devuelve la metainformación de un fichero/directorio (correspondiente al nº de inodo
-pasado como argumento): tipo, permisos, cantidad de enlaces de entradas en directorio,
-tamaño en bytes lógicos, timestamps y cantidad de bloques ocupados en la zona de
-datos, es decir todos los campos menos los punteros
-*/
+
+/**
+ * @brief Devuelve la metainformación de un fichero/directorio (correspondiente al nº de inodo
+ * pasado como argumento): tipo, permisos, cantidad de enlaces de entradas en directorio,
+ * tamaño en bytes lógicos, timestamps y cantidad de bloques ocupados en la zona de
+ * datos, es decir todos los campos menos los punteros
+ * 
+ * @param ninodo        Número de inodo del fichero/directorio
+ * @param STAT          Puntero a estructura de tipo STAT que almacena la información
+ * @return int          Devuelve 0 si todo va bien, o -1 en caso de error
+ */
 int mi_stat_f(unsigned int ninodo, struct STAT *STAT) {
     struct inodo inodo;
     if (leer_inodo(ninodo, &inodo) == -1) {
@@ -174,10 +193,16 @@ int mi_stat_f(unsigned int ninodo, struct STAT *STAT) {
     return 0;
 }
 
-/*  
-Cambia los permisos de un fichero/directorio (correspondiente al nº de inodo pasado
-como argumento, ninodo) con el valor que indique el argumento permisos
-*/
+
+/**
+ * @brief Cambia los permisos de un fichero/directorio (correspondiente al nº de inodo pasado
+ * como argumento, ninodo) con el valor que indique el argumento permisos
+ * 
+ * @param ninodo        Número de inodo del fichero/directorio
+ * @param permisos      Nuevos permisos
+ * @return int          Devuelve 0 si todo va bien, o -1 en caso de error
+ */
+ */
 int mi_chmod_f(unsigned int ninodo, unsigned char permisos) {
     struct inodo inodo;
     if (leer_inodo(ninodo, &inodo) == -1){
@@ -191,39 +216,46 @@ int mi_chmod_f(unsigned int ninodo, unsigned char permisos) {
     return 0;
 }
 
-/*  -Función: mi_truncar_f.
-    -Descripción: Trunca un fichero/directorio a los bytes indicados.
-    -Parámetros: Inodo del fichero/directorio, número de bytes a los que se quiere truncar.
-    -Return: Devuelve la cantidad de bloques liberados o -1 si hay un error o la operación no está permitida.
-*/
+
+/**
+ * @brief Trunca un fichero/directorio (correspondiente al nº de inodo, ninodo, pasado
+ * como argumento) a los bytes indicados como nbytes, liberando los bloques necesarios
+ * 
+ * @param ninodo    Número de inodo del fichero/directorio
+ * @param nbytes    Número de bytes a los que se quiere truncar
+ * @return int      Devuelve la cantidad de bloques liberados o -1 si hay un error o la operación no está permitida.
+ */
 int mi_truncar_f(unsigned int ninodo, unsigned int nbytes) {
-    int nblogico, liberados;
-    struct inodo inodo;
-    if (leer_inodo(ninodo, &inodo) == -1)
-        return -1;
-    if (nbytes > inodo.tamEnBytesLog) {
-        fprintf(stderr, "No se puede truncar más allá del EOF: %d\n", inodo.tamEnBytesLog);
+    unsigned int nblogico;
+    if (leer_inodo(ninodo, &inodo) == -1){
         return -1;
     }
+    // Miramos si tenemos permisos
     if ((inodo.permisos & 2) != 2) {
-        fprintf(stderr, "ERROR: permiso denegado de escritura\n");
+    fprintf(stderr, "Error en ficheros.c mi_truncar_f() --> Permisos denegados de escritura\n");
+    return -1;
+    } else {
+    if (inodo.tamEnBytesLog <= nbytes) {
+        fprintf(stderr, "Error en ficheros.c mi_truncar_f() --> %d: %s\n", errno, strerror(errno));
         return -1;
     }
-    if ((nbytes % BLOCKSIZE) == 0) {
+    // Calculamos nblogico
+    if (nbytes % BLOCKSIZE == 0) {
         nblogico = nbytes / BLOCKSIZE;
     } else {
         nblogico = nbytes / BLOCKSIZE + 1;
     }
-    liberados = liberar_bloques_inodo(ninodo, nblogico);
-    if (liberados == -1)
-        return -1;
+    int bloq_Liberados = liberar_bloques_inodo(ninodo, nblogico);
+    inodo.numBloquesOcupados = inodo.numBloquesOcupados - bloq_Liberados;
+    // Actualizamos mtime, ctime y tamEnBytesLog
     inodo.mtime = time(NULL);
-    inodo.ctime = time(NULL);
+    inodo.ctime  = time(NULL);
     inodo.tamEnBytesLog = nbytes;
-    inodo.numBloquesOcupados -= liberados;
-    if (escribir_inodo(ninodo, inodo) == -1)
-        return -1;
-    return liberados;
+    escribir_inodo(ninodo, inodo);
+    return bloq_Liberados;
+    }
+    fprintf(stderr, "Error en ficheros.c mi_truncar_f() --> %d: %s\n", errno, strerror(errno));
+    return -1;
 }
 
 /****************************************** FUNCIONES AUXILIARES **************************************************/
