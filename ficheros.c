@@ -13,7 +13,7 @@
  * @return int          Devuelve el nbytes, o -1 en caso de error
  */
 int mi_write_f(unsigned int ninodo, const void *buf_original, unsigned int offset, unsigned int nbytes) {
-    unsigned int primerBL, ultimoBL, desp1, desp2, nbfisico, desp2;
+    unsigned int primerBL, ultimoBL, desp1, desp2, nbfisico;
     char buf_bloque[BLOCKSIZE];
     struct inodo inodo;
 
@@ -94,7 +94,7 @@ int mi_write_f(unsigned int ninodo, const void *buf_original, unsigned int offse
  */
 int mi_read_f(unsigned int ninodo, void *buf_original, unsigned int offset, unsigned int nbytes) {
     
-    unsigned int primerBL, ultimoBL, desp1, desp2, leidos, desp2;
+    unsigned int primerBL, ultimoBL, desp1, desp2, leidos;
     char buf_bloque[BLOCKSIZE];
     int nbfisico;
     struct inodo inodo;
@@ -202,7 +202,6 @@ int mi_stat_f(unsigned int ninodo, struct STAT *STAT) {
  * @param permisos      Nuevos permisos
  * @return int          Devuelve 0 si todo va bien, o -1 en caso de error
  */
- */
 int mi_chmod_f(unsigned int ninodo, unsigned char permisos) {
     struct inodo inodo;
     if (leer_inodo(ninodo, &inodo) == -1){
@@ -225,7 +224,8 @@ int mi_chmod_f(unsigned int ninodo, unsigned char permisos) {
  * @param nbytes    Número de bytes a los que se quiere truncar
  * @return int      Devuelve la cantidad de bloques liberados o -1 si hay un error o la operación no está permitida.
  */
-int mi_truncar_f(unsigned int ninodo, unsigned int nbytes) {
+int truncar_f(unsigned int ninodo, unsigned int nbytes) {
+    struct inodo inodo;
     unsigned int nblogico;
     if (leer_inodo(ninodo, &inodo) == -1){
         return -1;
