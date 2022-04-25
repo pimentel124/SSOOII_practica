@@ -56,10 +56,8 @@ int initSB(unsigned int nbloques, unsigned int ninodos) {
     SB.cantInodosLibres = ninodos;    // tocar nivel3
     SB.totBloques = nbloques;
     SB.totInodos = ninodos;
-    // PUEDE QUE NO HAGA FALTA PONERLE PADDING
-    for (size_t i = 0; i < INODOSIZE - 2 * sizeof(unsigned char) - 3 * sizeof(time_t) - 18 * sizeof(unsigned int) - 6 * sizeof(unsigned char); i++) {
-        SB.padding[i] = 0;
-    }
+    
+
     return bwrite(posSB, &SB);
 }
 
@@ -133,18 +131,21 @@ int initAI() {
                 contInodos++;
             } else {
                 inodos[j].punterosDirectos[0] = UINT_MAX;
+                break;
             }
         }
-        // Escribimos el bloque de inodos
+        // Escribimos el bloque de inodos en el dispositivo virtual
         if (bwrite(i, inodos) == -1) {
             fprintf(stderr, "Error en ficheros_basico.c initAI() --> %d: %s\n", errno, strerror(errno));
             return -1;
         }
     }
+    /* se puede quitar
     if (bwrite(0, &SB) == -1) {
         fprintf(stderr, "Error en ficheros_basico.c initAI() --> %d: %s\n", errno, strerror(errno));
         return -1;
     }
+    */
     return 0;
 }
 
@@ -383,12 +384,13 @@ int leer_inodo(unsigned int ninodo, struct inodo *inodo) {
 
 /**
  * @brief Permite reservar un nuevo inodo y asignarle tipo y permisos
+ * y actualiza la lista de inodos libres
  * 
  * @param tipo      Tipo de inodo
  * @param permisos  Permisos de inodo
  * @return int      Devuelve el nº de inodo reservado
  */
-int reservar_inodo(unsigned char tipo, unsigned char permisos) {
+int reservar_inodo(unsigned char tipo, char permisos) {
     // encuentra el primer idondo libre (dato alamcenado en el SB), lo reserva (con
     // la ayuda de la funcuion escribir_inodo(), devuelve su numero y actualiza la
     // lista de inodos libres)
@@ -455,21 +457,20 @@ int obtener_nrangoBL(struct inodo *inodo, unsigned int nblogico, unsigned int *p
         return 3;
     } else {
         *ptr = 0;
-        fprintf(stderr, "Error en ficheros_basico.c obtener_nrangoBL()\nBloque lógico fuera de rango --> %d: %s\n", errno, strerror(errno));
+        fprintf(stderr, "Error en ficheros_basico.c obtener_nrangoBL()\nBloque lógico nblogico=%d fuera de rango --> %d: %s\n", nblogico, errno, strerror(errno));
         return -1;
     }
 }
 
 /**
- * @brief Permite obtener el indice de un bloque en funciòn de su nivel
- * Documento nivel 4 nivel_punteros sale como int pero como no toma valores
+ * @brief Permite obtener el indice de un bloque en funciòn de su nivel sale como int pero como no toma valores
  * negativos para ahorrar memoria empleamos unsigned int
  * 
  * @param nblogico          Nùmero de bloque lògico
  * @param nivel_punteros    Nivel del puntero
  * @return int              Devuelve el indice del bloque en funciòn de su nivel
  */
-int obtener_indice(unsigned int nblogico, unsigned int nivel_punteros) {
+int obtener_indice(unsigned int nblogico, int nivel_punteros) {
     if (nblogico < DIRECTOS) {  // si se encuentra en el primer nivel
         return nblogico;
     } else if (nblogico < INDIRECTOS0) {  // si se encuentra en el segundo nivel
@@ -499,14 +500,14 @@ int obtener_indice(unsigned int nblogico, unsigned int nivel_punteros) {
  * a un bloque lógico determinado del inodo indicado. Enmascara la gestión de los 
  * diferentes rangos de punteros directos e indirectos del inodo, de manera que
  * funciones externas no tienen que preocuparse de cómo acceder a los bloques
- * físicos apuntados desde el inodo. Si no funciona quitar el unsigned del char
+ * físicos apuntados desde el inodo.
  * 
  * @param ninodo    Nº de inodo del que se quiere obtener el bloque
  * @param nblogico  Nº de bloque lógico del que se quiere obtener el bloque físico
  * @param reservar  Indica si se debe reservar el bloque físico si no existe
  * @return int      Nº de bloque físico correspondiente al bloque lógico indicado
  */
-int traducir_bloque_inodo(unsigned int ninodo, unsigned int nblogico, unsigned char reservar) {
+int traducir_bloque_inodo(unsigned int ninodo, unsigned int nblogico, char reservar) {
     struct inodo inodo;
     unsigned int ptr, ptr_ant, salvar_inodo, nRangoBL, nivel_punteros, indice;
     int buffer[NPUNTEROS];
@@ -672,10 +673,10 @@ int liberar_bloques_inodo(unsigned int ninodo, unsigned int nblogico) {
     leer_inodo(ninodo, &inodo);
     tamInodo = inodo.tamEnBytesLog;
     // Disabilitar este if si se hacen pruebas con leer_sf
-    if (tamInodo == 0) {
+    /*if (tamInodo == 0) {
         printf("El fichero estaba vacío, return 0 en liberar_bloques_inodo()\n");
         return 0;  // Fichero vacìo
-    }
+    }*/
     // Obtenemos el ùltimo bloque lògico del inodo
     if (tamInodo % BLOCKSIZE == 0) {
         ultimoBL = tamInodo / BLOCKSIZE - 1;

@@ -1,4 +1,4 @@
-# SSOOII_practica
+    # SSOOII_practica
 
 https://github.com/izarc6/practicaso2/blob/master/bloques.c
 

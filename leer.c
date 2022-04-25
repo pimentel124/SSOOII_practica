@@ -30,7 +30,6 @@ int main(int argc, char **argv){
         return -1;
     }
 
-
     bytes_leidos = mi_read_f(ninodo, buffer, offset, size);
     //printf("FUERA bytes leidos: %d\n", bytes_leidos); //DEBUG
 
@@ -40,7 +39,7 @@ int main(int argc, char **argv){
         total_bytes_leidos += bytes_leidos;
         offset += size;
 
-        if(memset(buffer, 0, size)== NULL){ // Cleansing
+        if(memset(buffer, 0, size) == NULL){ // Cleansing
             fprintf(stderr, "Error while setting memory\n");
             return -1;
         }
@@ -48,6 +47,7 @@ int main(int argc, char **argv){
         bytes_leidos = mi_read_f(ninodo, buffer, offset, size);
 
     }
+    
     leer_inodo(ninodo,&inodo);
 
     printf("\n\ntotal leidos %d\n", total_bytes_leidos);

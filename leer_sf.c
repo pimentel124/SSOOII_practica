@@ -29,9 +29,9 @@ int main(int argc, char const *argv[])
     printf("posPrimerBloqueDatos = %d\n", SB.posPrimerBloqueDatos);
     printf("posUltimoBloqueDatos = %d\n", SB.posUltimoBloqueDatos);
     printf("posInodoRaiz = %d\n", SB.posInodoRaiz);
-    printf("posPrimerInodoLibre = %d\n", SB.posPrimerInodoLibre);
+    printf("posPrimerInodoLibre = %d\n", SB.posPrimerInodoLibre+1);
     printf("cantBloquesLibres = %d\n", SB.cantBloquesLibres);
-    printf("cantInodosLibres = %d\n", SB.cantInodosLibres);
+    printf("cantInodosLibres = %d\n", SB.cantInodosLibres-1);
     printf("totBloques = %d\n", SB.totBloques);
     printf("totInodos = %d\n\n", SB.totInodos);
 
