@@ -39,7 +39,7 @@ int main(int argc, char **argv){
         strcpy(buff, argv[2]);              // Copiamos el texto pasado por parametro al buffer
         for(int i = 0; i < 5; i++){         // Recorremos todos los offset 
 
-            printf("Se ha reservado el inodo[%d] con offset: %d\n", ninodo, offset[i]);
+            printf("Se ha reservado el inodo[%d] con offset: %d\n ", ninodo, offset[i]);
             //  nBytes += mi_write_f(ninodo, buff, offset[i], length); // Guardamos la cantidad de bytes escritos
             aux1 = mi_write_f(ninodo, buff, offset[i], length);
             if(memset(buff, 0, sizeof(buff)) == NULL){
@@ -52,7 +52,7 @@ int main(int argc, char **argv){
             
 
             // DEBUG
-            printf(" write : %d\t read: %d\n",aux1, aux2 );
+            printf("write : %d\t read: %d\n",aux1, aux2 );
         
             // DEBUG
             printSTAT(ninodo);
@@ -62,7 +62,7 @@ int main(int argc, char **argv){
         strcpy(buff, argv[2]);
         for(int i = 0; i < 5; i++){
             ninodo = reservar_inodo('f', 6);
-            printf("Se ha reservado el inodo[%d] con offset: %d", ninodo, offset[i]);
+            printf("Se ha reservado el inodo[%d] con offset: %d ", ninodo, offset[i]);
             aux1 = mi_write_f(ninodo, buff, offset[i], length);
             if(memset(buff, 0, sizeof(buff)) == NULL){
                 fprintf(stderr, "Error");
@@ -92,14 +92,14 @@ int printSTAT(int ninodo){
     strftime(cdate, 24, "%a %d-%m-%Y %H:%M:%S", info = localtime(&p_stat.ctime));
     strftime(mdate, 24, "%a %d-%m-%Y %H:%M:%S", info = localtime(&p_stat.mtime));
     printf("DATOS INODO [%i]\n\
-    tipo=%c\n\
-    permisos=%i\n\
+    tipo= %c\n\
+    permisos= %i\n\
     atime: %s\n\
     ctime: %s\n\
     mtime: %s\n\
     nlinks: %i\n\
-    tamEnBytesLog=%i\n\
-    numBloquesOcupados=%i\n",
+    tamEnBytesLog= %i\n\
+    numBloquesOcupados= %i\n",
     ninodo, p_stat.tipo, p_stat.permisos, adate, cdate, mdate, p_stat.nlinks, p_stat.tamEnBytesLog, p_stat.numBloquesOcupados);
     return 0;
 }
