@@ -1,33 +1,31 @@
 #include "ficheros.h"
 
-int main(int argc, char const *argv[])
-{
-    char nombre_dispositivo[1024];
-    unsigned int ninodo;
-    unsigned char permisos;
-    if (argc != 4)
-    {
-        fprintf(stderr, "Sintaxis: escribir <nombre_dispositivo> <ninodo> <permisos>\n");
-        exit(EXIT_FAILURE);
+int main(int argc, char const **argv){
+    
+    //Check syntax
+    if(argv[1] == NULL || argv[2] == NULL ){  
+        fprintf(stderr,"Command syntax should be: permitir <nombre_dispositivo> <ninodo> <permisos>\n");
+        return -1;
     }
-    strcpy(nombre_dispositivo, argv[1]);
-    if (access(nombre_dispositivo, F_OK) == -1)
+
+
+    if (bmount(argv[1]) == -1)
     {
-        fprintf(stderr, "ERROR: No existe el archivo\n");
-        exit(EXIT_FAILURE);
+        fprintf(stderr, "Permitir.c -- Error al montar\n");
+        return -1;
     }
-    ninodo = atoi(argv[2]);
-    permisos = atoi(argv[3]);
-    if (permisos > 7)
+    if(mi_chmod_f(atoi(argv[2]), atoi(argv[3])) == -1)
     {
-        fprintf(stderr, "Valor incorrecto para <permisos>");
-        exit(EXIT_FAILURE);
+        fprintf(stderr, "Permitir.c -- Error al cambiar permisos\n");
+        return -1;
     }
-    if (bmount(nombre_dispositivo) == -1)
-        exit(EXIT_FAILURE);
-    if (mi_chmod_f(ninodo, permisos) == -1)
-        exit(EXIT_FAILURE);
-    if (bumount(nombre_dispositivo) == -1)
-        exit(EXIT_FAILURE);
+
+    if (bumount() == -1)
+    {
+        fprintf(stderr, "Permitir.c -- Error al desmontar\n");
+        return -1;
+    }
+
     return 0;
+    
 }

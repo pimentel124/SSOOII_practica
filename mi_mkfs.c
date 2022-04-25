@@ -7,11 +7,15 @@ int main(int argc, char **argv) {
 
     // Comprobar si los agumentos son validos
     if (argv[1] == NULL || argv[2] == NULL) {
-        fprintf(stderr,"Los argumentos no son validos. Uso: mi_mkfs <nombre_disp> <nbloques>\n");
-        exit(1);
+        fprintf(stderr,"mi_mkfs.c -- Los argumentos no son validos. Uso: mi_mkfs <nombre_disp> <nbloques>\n");
+        return -1;
     }
 
-    bmount(argv[1]);    // Abrimos el fichero de disco, si no existe se crea
+    if(bmount(argv[1])==-1) {   // Abrimos el fichero de disco, si no existe se crea
+        fprintf(stderr,"mi_mkf.c -- Error al montar el dispositivo\n");
+        return -1;
+    }; 
+
     unsigned char buffer[BLOCKSIZE]; //el buffer de memoria empleado puede ser un array de tipo unsigned char del tamaño de un bloque
     memset(buffer,'\0',BLOCKSIZE);  // Bloque vacío
 
@@ -22,7 +26,10 @@ int main(int argc, char **argv) {
 
     // Inicializamos a 0s el fichero empleado como dispositivo virtual
     for(int i = 0; i < nbloques; i++) {
-        bwrite(i,buffer);
+        if(bwrite(i,buffer)==-1) {
+            fprintf(stderr,"mi_mkfs.c -- Error al escribir en el dispositivo\n");
+            return -1;
+        }
     }
 
     printf("Escritura bloques vacíos completada.\n");
@@ -36,11 +43,18 @@ int main(int argc, char **argv) {
     //Creación de la lista enlazada de inodos
     initAI();
     printf("InitAI completado.\n");
+    
     //Creaciòn del directorio raiz
-    //reservar_inodo('d',7);
+    reservar_inodo('d', 7);
     printf("Creación directorio raíz completada.\n");
 
-    bumount();  // Se desmonta el fichero
+    if(bumount()==-1){
+        fprintf(stderr,"Error al desmontar el dispositivo\n");
+        return -1;
+    };
+      // Se desmonta el fichero
     printf("FS desmontado.\n");
+
+    return 0;
 
 }

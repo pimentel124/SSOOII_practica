@@ -96,14 +96,18 @@ int mi_read_f(unsigned int ninodo, void *buf_original, unsigned int offset, unsi
     char buf_bloque[BLOCKSIZE];
     int nbfisico;
     struct inodo inodo;
+    leidos = 0;
+
     if (leer_inodo(ninodo, &inodo) == -1) {
         return -1;
     }
-    if ((inodo.permisos & 4) == 4) {  // Esta operación sólo está permitida cuando haya permiso de lectura
-        
+    if ((inodo.permisos & 4) != 4) {  // Esta operación sólo está permitida cuando haya permiso de lectura
+    // Esta operación
+        fprintf(stderr, "Error en mi_read_f()\nNo existen permisos de lectura, permisos del inodo: %d ||  %d: %s\n", inodo.permisos, errno, strerror(errno));
+        return -1;
+    }
 
         if (offset >= inodo.tamEnBytesLog) {
-            leidos = 0;
             return leidos;  // No podemos leer nada
         }
         if ((offset + nbytes) >= inodo.tamEnBytesLog) {  // pretende leer más allá de EOF
@@ -115,9 +119,11 @@ int mi_read_f(unsigned int ninodo, void *buf_original, unsigned int offset, unsi
     ultimoBL = (offset + nbytes - 1) / BLOCKSIZE;
     desp1 = offset % BLOCKSIZE;
     desp2 = (offset + nbytes - 1) % BLOCKSIZE;
+
+    memset(buf_bloque, 0, sizeof(buf_bloque));
+    nbfisico = traducir_bloque_inodo(ninodo, primerBL, 0);
     if (primerBL == ultimoBL)  // Un solo bloque involucrado
     {
-        nbfisico = traducir_bloque_inodo(ninodo, primerBL, 0);
         if (nbfisico != -1) {
             if (bread(nbfisico, buf_bloque) == -1) {
                 return -1;
@@ -162,10 +168,7 @@ int mi_read_f(unsigned int ninodo, void *buf_original, unsigned int offset, unsi
         return -1;
     }
     return leidos;
-}else{ // Esta operación
-        fprintf(stderr, "Error en mi_read_f()\nNo existen permisos de lectura, permisos del inodo: %d ||  %d: %s\n", inodo.permisos, errno, strerror(errno));
-        return -1;
-    }
+}
 
 /**
  * @brief Devuelve la metainformación de un fichero/directorio (correspondiente al nº de inodo
@@ -255,58 +258,4 @@ int truncar_f(unsigned int ninodo, unsigned int nbytes) {
     }
     fprintf(stderr, "Error en ficheros.c mi_truncar_f() --> %d: %s\n", errno, strerror(errno));
     return -1;
-}
-
-/****************************************** FUNCIONES AUXILIARES **************************************************/
-
-/*	-Función: datos_inodo.
-        -Descripción: Imprime los valores de un inodo.
-        -Parámetros: Inodo que se va a mostrar
-        -Return:
-*/
-void datos_inodo(struct inodo inodo) {
-    struct tm *ts;
-    char atime[80];
-    char mtime[80];
-    char ctime[80];
-    ts = localtime(&inodo.atime);
-    strftime(atime, sizeof(atime), "%a %Y-%m-%d %H:%M:%S", ts);
-    ts = localtime(&inodo.mtime);
-    strftime(mtime, sizeof(mtime), "%a %Y-%m-%d %H:%M:%S", ts);
-    ts = localtime(&inodo.ctime);
-    strftime(ctime, sizeof(ctime), "%a %Y-%m-%d %H:%M:%S", ts);
-    printf("tipo: %c\n", inodo.tipo);
-    printf("permisos: %d\n", inodo.permisos);
-    printf("atime: %s\n", atime);
-    printf("ctime: %s\n", ctime);
-    printf("mtime: %s\n", mtime);
-    printf("nlinks: %u\n", inodo.nlinks);
-    printf("tamEnBytesLog: %u\n", inodo.tamEnBytesLog);
-    printf("numBloquesOcupados: %u\n", inodo.numBloquesOcupados);
-}
-
-/*	-Función: datos_STAT.
-        -Descripción: Imprime los valores de un inodo.
-        -Parámetros: STAT del inodo que se va a mostrar.
-        -Return:
-*/
-void datos_STAT(struct STAT STAT) {
-    struct tm *ts;
-    char atime[80];
-    char mtime[80];
-    char ctime[80];
-    ts = localtime(&STAT.atime);
-    strftime(atime, sizeof(atime), "%a %Y-%m-%d %H:%M:%S", ts);
-    ts = localtime(&STAT.mtime);
-    strftime(mtime, sizeof(mtime), "%a %Y-%m-%d %H:%M:%S", ts);
-    ts = localtime(&STAT.ctime);
-    strftime(ctime, sizeof(ctime), "%a %Y-%m-%d %H:%M:%S", ts);
-    fprintf(stderr, "tipo=%c\n", STAT.tipo);
-    fprintf(stderr, "permisos=%d\n", STAT.permisos);
-    fprintf(stderr, "atime: %s\n", atime);
-    fprintf(stderr, "ctime: %s\n", ctime);
-    fprintf(stderr, "mtime: %s\n", mtime);
-    fprintf(stderr, "nlinks=%u\n", STAT.nlinks);
-    fprintf(stderr, "tamEnBytesLog=%u\n", STAT.tamEnBytesLog);
-    fprintf(stderr, "numBloquesOcupados=%u\n\n", STAT.numBloquesOcupados);
 }

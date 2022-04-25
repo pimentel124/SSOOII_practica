@@ -37,7 +37,11 @@ int main(int argc, char **argv){
     printf("nlinks: %u\n", p_stat.nlinks);
     printf("tamEnBytesLog: %u\n", p_stat.tamEnBytesLog);
     printf("numBloquesOcupados: %u\n", p_stat.numBloquesOcupados);
-    bumount();
+    if(bumount(argv[2]) == -1){
+        fprintf(stderr,"Truncar.c -- Error while unmounting\n");
+        return -1;
+    }
+return 0;
 
     
 }

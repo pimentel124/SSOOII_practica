@@ -1,99 +1,64 @@
 #include "ficheros.h"
 
-int printSTAT(int ninodo);
+int offsets[5] = {9000, 209000, 30725000, 409605000, 480000000};
 
-struct superbloque SB;
-char adate[24], cdate[24], mdate[24];  // Tiempos
-struct STAT p_stat;
-int offset[5] = {9000, 209000, 30725000, 409605000, 480000000};
-struct tm * info;
-int aux1, aux2 =0;
-
-
-int main(int argc, char **argv){
-
-    if(argv[1] == NULL || argv[2] == NULL || argv[3] == NULL){ // Checkear syntax 
-        fprintf(stderr,"Command syntax should be: escribir <nombre_dispositivo> <\"$(cat fichero)\"> <diferentes_diferentes_inodos>\n");
+int main(int argc, char **argv) {
+    // Consulta sintaxis correcta
+    if (argv[1] == NULL || argv[2] == NULL || argv[3] == NULL) {
+        fprintf(stderr, "Sintaxis: escribir <nombre_dispositivo> <\"$(cat fichero)\"> <diferentes_diferentes_inodos>\nOffsets: 9000, 209000, 30725000, 409605000, 480000000\n Si diferentes_inodos=0 se reserva un solo inodo para todos los offsets\n");
         return -1;
     }
 
-    unsigned int length = strlen(argv[2]);
-    int diferentes_inodos = atoi(argv[3]);
-    int nBytes, ninodo = 0;
-    const char *dir;
-    dir = argv[1];
-    char buff[length];
-    
-    if (bmount(dir) == -1){
-        fprintf(stderr,"Error while mounting\n");
+    printf("Longitud del texto: %ld\n\n", strlen(argv[2]));
+
+    // Montar dispositivo virtual
+    if (bmount(argv[1]) == -1) {
+        fprintf(stderr, "Escribir.c -- Error al montar\n");
         return -1;
     }
 
-    if(bread(posSB, &SB) == -1){ // miramos los valores actuales del superbloque
-        fprintf(stderr, "Error while reading\n");
+    // Reservar inodo
+    int ninodo = reservar_inodo('f', 6);
+    if (ninodo == -1) {
+        fprintf(stderr, "Escribir.c -- Error al reservar inodo\n");
         return -1;
     }
-
-    if(diferentes_inodos == 0){             // Mismo inodo para todos los offsets
-        ninodo = reservar_inodo('f', 6); 
-        strcpy(buff, argv[2]);              // Copiamos el texto pasado por parametro al buffer
-
-        // DEBUG
-        printf("\nLongitud texto %d\n \n", length);
-
-        for(int i = 0; i < 5; i++){         // Recorremos todos los offset 
-            
-            printf("Nº de inodo reservado: %d \noffset: %d", ninodo+1, offset[i]);
-            //  nBytes += mi_write_f(ninodo, buff, offset[i], length); // Guardamos la cantidad de bytes escritos
-            aux1 = mi_write_f(ninodo, buff, offset[i], length);
-            if(memset(buff, 0, sizeof(buff)) == NULL){
-                fprintf(stderr, "Error");
-                return -1;
-            }
-
-            aux2 = mi_read_f(ninodo, buff, offset[i], length); //No sabemos si esto es necesario, pero antes estaba comentado y no ha cambiado su comportamiento
-            nBytes += aux1;
-
-            // DEBUG
-            printSTAT(ninodo);
-
+    // Escritura en todos los offsets del array.
+    for (int i = 0; i < (sizeof(offsets) / sizeof(int)); i++) {
+        printf("Nº inodo reservado: %d\n", ninodo);
+        printf("offset: %d\n", offsets[i]);
+        int bytesescritos = mi_write_f(ninodo, argv[2], offsets[i], strlen(argv[2]));
+        if (bytesescritos == -1) {
+            fprintf(stderr, "Escribir.c -- Error al escribir en el inodo\n");
+            return -1;
         }
-    }else if(diferentes_inodos == 1){ // Puede dar -1 al haber un error
-        strcpy(buff, argv[2]);
-        for(int i = 0; i < 5; i++){
+        printf("Bytes escritos: %d\n", bytesescritos);
+
+        // Información inodo escrito
+        struct STAT p_stat;
+        if (mi_stat_f(ninodo, &p_stat)) {
+            fprintf(stderr, "Escribir.c -- Error al obtener información del inodo\n");
+            return -1;
+        }
+
+        printf("stat.tamEnBytesLog=%d\n", p_stat.tamEnBytesLog);
+        printf("stat.numBloquesOcupados=%d\n\n", p_stat.numBloquesOcupados);
+
+        // Si diferentes_inodos=0, se reserva un solo inodo para todos los offsets
+        if (strcmp(argv[3], "0")) {
             ninodo = reservar_inodo('f', 6);
-            printf("\n ");
-            printf("\nNº de inodo reservado: %d \noffset: %d \n", ninodo+1, offset[i]);
-            aux1 = mi_write_f(ninodo, buff, offset[i], length);
-            if(memset(buff, 0, sizeof(buff)) == NULL){
-                fprintf(stderr, "Error");
+            if (ninodo == -1) {
+                fprintf(stderr, "Escribir.c -- Error al reservar inodo\n");
                 return -1;
             }
-            aux2 = mi_read_f(ninodo, buff, offset[i], length);
-            nBytes += aux1;
-
-            // DEBUG
-            printf("write : %d\t read: %d\n",aux1, aux2 );
-            printSTAT(ninodo);
         }
-        
     }
 
-    if(bumount() == -1){
-        fprintf(stderr, "Error while unmounting\n");
+    // Desmontar dispositivo virtual
+    if (bumount(argv[2]) == -1) {
+        fprintf(stderr, "Escribir.c -- Error al desmontar\n");
         return -1;
     }
-    return 0;
-}
 
-int printSTAT(int ninodo){
-    mi_stat_f(ninodo, &p_stat);
-
-    strftime(adate, 24, "%a %d-%m-%Y %H:%M:%S", info = localtime(&p_stat.atime));
-    strftime(cdate, 24, "%a %d-%m-%Y %H:%M:%S", info = localtime(&p_stat.ctime));
-    strftime(mdate, 24, "%a %d-%m-%Y %H:%M:%S", info = localtime(&p_stat.mtime));
-    printf("\nBytes escritos %i\n", aux1);
-    printf("stat.tamEnBytesLog=%i\nstat.numBloquesOcupados=%i\n",
-p_stat.tamEnBytesLog, p_stat.numBloquesOcupados);
     return 0;
 }
