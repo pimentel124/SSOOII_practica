@@ -2,7 +2,7 @@
 void datos_inodo(struct inodo inodo);
 int main(int argc, char const *argv[])
 {
-    char nombre_dispositivo[1024];
+    
     // struct inodo inodo_reservado;
     // int ninodo;
     struct superbloque SB;
