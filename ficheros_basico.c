@@ -496,7 +496,7 @@ int obtener_indice(unsigned int nblogico, int nivel_punteros) {
  * @param reservar  Indica si se debe reservar el bloque físico si no existe
  * @return int      Nº de bloque físico correspondiente al bloque lógico indicado
  */
-int traducir_bloque_inodo(unsigned int ninodo, unsigned int nblogico, char reservar) {
+int traducir_bloque_inodo(unsigned int ninodo, unsigned int nblogico, int reservar) {
     struct inodo inodo;
     unsigned int ptr, ptr_ant, salvar_inodo, nRangoBL, nivel_punteros, indice;
     int buffer[NPUNTEROS];
