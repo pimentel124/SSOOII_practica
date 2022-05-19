@@ -87,7 +87,7 @@ int escribir_inodo(unsigned int ninodo, struct inodo inodo);
 int leer_inodo(unsigned int ninodo, struct inodo *inodo);
 int reservar_inodo(unsigned char tipo, char permisos);
 //Nivel 4
-int traducir_bloque_inodo(unsigned int ninodo, unsigned int nblogico, int reservar);
+int traducir_bloque_inodo(unsigned int ninodo, unsigned int nblogico, unsigned char reservar);
 //Nivel 6
 int liberar_inodo(unsigned int ninodo);
-int liberar_bloques_inodo(unsigned int ninodo, unsigned int nblogico);
+int liberar_bloques_inodo(unsigned int nblogico, struct inodo *inodo);

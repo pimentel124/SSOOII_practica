@@ -292,7 +292,7 @@ int reservar_bloque() {
     SB.cantBloquesLibres--;
     memset(bufferAUX, 0, BLOCKSIZE);
 
-    if (bwrite(SB.posPrimerBloqueDatos + nbloque - 1, bufferAux) == -1) {
+    if (bwrite(SB.posPrimerBloqueDatos + nbloque - 1, bufferAUX) == -1) {
         fprintf(stderr, "Error en ficheros_basico.c reservar_bloque() --> %d: %s\n", errno, strerror(errno));
         return -1;
     }
@@ -534,14 +534,14 @@ int obtener_indice(unsigned int nblogico, int nivel_punteros) {
  * @param reservar  Indica si se debe reservar el bloque físico si no existe
  * @return int      Nº de bloque físico correspondiente al bloque lógico indicado
  */
-int traducir_bloque_inodo(unsigned int ninodo, unsigned int nblogico, int reservar) {
+int traducir_bloque_inodo(unsigned int ninodo, unsigned int nblogico, unsigned char reservar) {
     struct inodo inodo;
     unsigned int ptr;
     int ptr_ant, salvar_inodo, nRangoBL, nivel_punteros, indice;
     int buffer[NPUNTEROS];
 
     // se lee el inodo
-    if (bread(ninodo, &inodo) == -1) {
+    if (leer_inodo(ninodo, &inodo) == -1) {
         fprintf(stderr, "Error en ficheros_basico.c traducir_bloque_inodo() --> %d: %s\n", errno, strerror(errno));
         return -1;
     }
@@ -725,9 +725,7 @@ int liberar_bloques_inodo(unsigned int nblogico, struct inodo *inodo) {
     unsigned char bufferAUX[BLOCKSIZE];
     memset(bufferAUX, 0, BLOCKSIZE);
 
-    // Procedimiento
-    salvar_inodo = 0;
-    // Obtenemos el ùltimo bloque lògico del inodo
+    // Obtenemos el último bloque lógico del inodo
     if (inodo->tamEnBytesLog % BLOCKSIZE == 0) {
         ultimoBL = ((inodo->tamEnBytesLog) / BLOCKSIZE) - 1;
     } else {
@@ -753,7 +751,7 @@ int liberar_bloques_inodo(unsigned int nblogico, struct inodo *inodo) {
         while (ptr > 0 && nivel_punteros > 0) {
             
             indice = obtener_indice(nblog, nivel_punteros);
-            if ((indice < 0) || (nblog == primerBL)){
+            if ((indice < 0) || (nblog == nblogico)) {
 
                 // únicamen se lee el dispositibo si no está ya cargado previamente en un buffer
                 if (bread(ptr, bloques_punteros[nivel_punteros-1]) == -1) {
