@@ -1,4 +1,5 @@
 #include "ficheros_basico.h"
+#include "directorios.h"
 
 // Uso de mi_mkfs: ./mi_mkfs <nombre_dispositivo> <nbloques>
 // argc=3            ^ argv[0]     ^ argv[1]         ^ argv[2]

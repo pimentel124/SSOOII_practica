@@ -1,5 +1,5 @@
 #include "ficheros_basico.h"
-
+#incluide "directorios.h"
 #define DEBUG 1
 
 struct superbloque SB;
