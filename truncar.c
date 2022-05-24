@@ -3,7 +3,7 @@
 int main(int argc, char **argv){
     struct STAT p_stat;
     struct tm * info;
-    char adate[24], cdate[24], mdate[24];
+    char adate[80], cdate[80], mdate[80];
     //Check syntax
     if(argv[1] == NULL || argv[2] == NULL || argv[3] == NULL ){  
         fprintf(stderr,"Command syntax should be: truncar <nombre_dispositivo> <nº inodo> <nbytes>\n");
@@ -24,20 +24,24 @@ int main(int argc, char **argv){
     }
     
     mi_stat_f(ninodo, &p_stat);
-
-    strftime(adate, 24, "%a %d-%m-%Y %H:%M:%S", info = localtime(&p_stat.atime));
-    strftime(cdate, 24, "%a %d-%m-%Y %H:%M:%S", info = localtime(&p_stat.ctime));
-    strftime(mdate, 24, "%a %d-%m-%Y %H:%M:%S", info = localtime(&p_stat.mtime));
-    printf("\nDATOS INODO [%i]\n", ninodo);
-    printf("tipo: %c\n", p_stat.tipo);
-    printf("permisos: %i\n", p_stat.permisos);
+    printf("DATOS INODO: %d\n", ninodo);
+    printf("Tipo: %c\n", p_stat.tipo);
+    printf("Permisos: %d\n", p_stat.permisos);
+    info = localtime(&p_stat.atime);
+    strftime(adate, sizeof(adate), "%a %Y-%m-%d %H:%M:%S", info);
+    info = localtime(&p_stat.mtime);
+    strftime(mdate, sizeof(mdate), "%a %Y-%m-%d %H:%M:%S", info);
+    info = localtime(&p_stat.ctime);
+    strftime(cdate, sizeof(cdate), "%a %Y-%m-%d %H:%M:%S", info);
     printf("atime: %s\n", adate);
     printf("mtime: %s\n", mdate);
-    printf("Ctime: %s\n", cdate);
-    printf("nlinks: %u\n", p_stat.nlinks);
-    printf("tamEnBytesLog: %u\n", p_stat.tamEnBytesLog);
-    printf("numBloquesOcupados: %u\n", p_stat.numBloquesOcupados);
-    if(bumount(argv[2]) == -1){
+    printf("ctime: %s\n", cdate);
+    printf("numlinks: %d\n", p_stat.nlinks);
+    fprintf(stderr, "tamEnBytesLog: %d\n", p_stat.tamEnBytesLog);
+    fprintf(stderr, "numBloquesOcupados: %d\n", p_stat.numBloquesOcupados);
+    
+    
+    if(bumount() == -1){
         fprintf(stderr,"Truncar.c -- Error while unmounting\n");
         return -1;
     }
