@@ -11,9 +11,11 @@ static int descriptor = 0;
  * @return int      Devuelve el descriptor del fichero de disco o -1 en caso de error
  */
 int bmount(const char *camino) {
+
+    umask(000);
     descriptor = open(camino, O_RDWR | O_CREAT, 0666);
 
-    if (descriptor < 0) {
+    if (descriptor == -1) {
         fprintf(stderr, "ERROR %d: %s\n", errno, strerror(errno));
         return -1;
     }
@@ -26,7 +28,7 @@ int bmount(const char *camino) {
  * @return int    Devuelve 0 en caso de éxito o -1 en caso de error
  */
 int bumount() {
-    if (close(descriptor) < 0) {
+    if (close(descriptor) ==-1) {
         fprintf(stderr, "ERROR %d: %s\n", errno, strerror(errno));
         return -1;
     }
@@ -43,12 +45,12 @@ int bumount() {
  */
 int bwrite(unsigned int nbloque, const void *buf) {
     int nbytes;
-    if (lseek(descriptor, BLOCKSIZE * nbloque, SEEK_SET) < 0) {
+    if (lseek(descriptor, BLOCKSIZE * nbloque, SEEK_SET) == -1) {
         fprintf(stderr, "ERROR %d: %s\n", errno, strerror(errno));
         return -1;
     }
 
-    if ((nbytes = write(descriptor, buf, BLOCKSIZE)) < 0) {
+    if ((nbytes = write(descriptor, buf, BLOCKSIZE)) == -1) {
 
         fprintf(stderr, "ERROR %d: %s\n", errno, strerror(errno));
         return -1;
@@ -66,16 +68,16 @@ int bwrite(unsigned int nbloque, const void *buf) {
  * @return int      Devuelve nbytes en caso de éxito o -1 en caso de error
  */
 int bread(unsigned int nbloque, void *buf) {
-    int nbytes;
-    if (lseek(descriptor, BLOCKSIZE * nbloque, SEEK_SET) < 0) {
+    int bloqueLogico;
+    if (lseek(descriptor, BLOCKSIZE * nbloque, SEEK_SET) == -1) {
 
         fprintf(stderr, "ERROR %d: %s\n", errno, strerror(errno));
         return -1;
     }
-    if ((nbytes = read(descriptor, buf, BLOCKSIZE)) < 0) {
+    if ((bloqueLogico = read(descriptor, buf, BLOCKSIZE)) < 0) {
         
         fprintf(stderr, "ERROR %d: %s\n", errno, strerror(errno));
         return -1;
     }
-    return nbytes;
+    return bloqueLogico;
 }
