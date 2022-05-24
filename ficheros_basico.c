@@ -551,7 +551,7 @@ int traducir_bloque_inodo(unsigned int ninodo, unsigned int nblogico, unsigned c
     nRangoBL = obtener_nrangoBL(&inodo, nblogico, &ptr);  // 0:D, 1:I0, 2:I1, 3:I2
 
     nivel_punteros = nRangoBL;
-    indice = obtener_indice(nblogico, nivel_punteros);  //puede que se tenga que modificar
+    
     // nivel_punteros = nRangoBL
     while (nivel_punteros > 0) {
         if (ptr == 0) {
@@ -562,10 +562,7 @@ int traducir_bloque_inodo(unsigned int ninodo, unsigned int nblogico, unsigned c
             } else {
                 salvar_inodo = 1;
 
-                if ((ptr = reservar_bloque()) == -1) {
-                    fprintf(stderr, "Error en ficheros_basico.c traducir_bloque_inodo--> %d: %s\nptr ==-1", errno, strerror(errno));
-                    return -1;
-                }
+                ptr = reservar_bloque();
                 inodo.numBloquesOcupados++;
                 inodo.ctime = time(NULL);  // se actualiza ctime a fecha actual
 
@@ -599,11 +596,11 @@ int traducir_bloque_inodo(unsigned int ninodo, unsigned int nblogico, unsigned c
             fprintf(stderr, "Error en ficheros_basico.c traducir_bloque_inodo--> %d: %s\nerror en bread", errno, strerror(errno));
             return -1;
         }
-    }
+    
     if ((indice = obtener_indice(nblogico, nivel_punteros)) == -1) {
         fprintf(stderr, "Error en ficheros_basico.c traducir_bloque_inodo--> %d: %s\nobtenerindice=-1", errno, strerror(errno));
         return -1;
-
+    }
         ptr_ant = ptr;
         ptr = buffer[indice];
         nivel_punteros--;

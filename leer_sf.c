@@ -1,6 +1,7 @@
 #include "directorios.h"
 
 #define DEBUG 1
+#define DEBUG2 0
 
 struct superbloque SB;
 
@@ -21,7 +22,7 @@ int main(int argc, char **argsv) {
         }
         // Mostrar información del superbloque
         InfoSB();
-#if DEBUG
+#if DEBUG2
         // Mostrar información de la lista enlazada
         InfoListaEnlazada();
 #endif
@@ -34,7 +35,9 @@ int main(int argc, char **argsv) {
 
 #if DEBUG
         // Mostrar información del mapa de bits
+        #if DEBUG2
         InfoMB();
+        #endif
         // Mostrar información de los inodos
         InfoInodo();
 #endif
@@ -43,7 +46,7 @@ int main(int argc, char **argsv) {
         // Mostrar información de la traducción de BloquesInodo
         InfoTraducirBloqueInodo();
 #endif
-#if DEBUG
+#if DEBUG2
         // Mostrar creación directorios y errores
         mostrar_buscar_entrada("pruebas/", 1);            // ERROR_CAMINO_INCORRECTO
         mostrar_buscar_entrada("/pruebas/", 0);           // ERROR_NO_EXISTE_ENTRADA_CONSULTA

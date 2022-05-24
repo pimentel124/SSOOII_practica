@@ -244,7 +244,7 @@ int mi_chmod_f(unsigned int ninodo, unsigned char permisos) {
  * @param nbytes    Número de bytes a los que se quiere truncar
  * @return int      Devuelve la cantidad de bloques liberados o -1 si hay un error o la operación no está permitida.
  */
-int truncar_f(unsigned int ninodo, unsigned int nbytes) {
+int mi_truncar_f(unsigned int ninodo, unsigned int nbytes) {
     struct inodo inodo;
     unsigned int nblogico = 0;
     if (leer_inodo(ninodo, &inodo) == -1) {

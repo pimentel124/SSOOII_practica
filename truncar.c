@@ -9,18 +9,21 @@ int main(int argc, char **argv) {
         fprintf(stderr, "Command syntax should be: truncar <nombre_dispositivo> <nº inodo> <nbytes>\n");
         return -1;
     }
-    int ninodo = atoi(argv[2]);
-    int nbytes = atoi(argv[3]);
+    
 
     // Montar el disco
     if (bmount(argv[1]) == -1) {
         fprintf(stderr, "Error while mounting\n");
         return -1;
     }
+
+    int ninodo = atoi(argv[2]);
+    int nbytes = atoi(argv[3]);
+
     if (nbytes == 0) {
         liberar_inodo(ninodo);
     } else {
-        truncar_f(ninodo, nbytes);
+        mi_truncar_f(ninodo, nbytes);
     }
 
     mi_stat_f(ninodo, &p_stat);

@@ -13,7 +13,7 @@ int extraer_camino(const char *camino, char *inicial, char *final, char *tipo) {
     return 0;
 
     // Check syntax
-    if (argv[0] != '/') {
+    if (camino[0] != '/') {
         return -1;
     }
     if (camino == NULL || inicial == NULL || final == NULL || tipo == NULL) {
@@ -27,13 +27,13 @@ int extraer_camino(const char *camino, char *inicial, char *final, char *tipo) {
         // nos quedamos con la parte inicial menos resto
         strncpy(inicial, (camino + 1), (strlen(camino) - (strlen(resto) - 1)));
         // nos quedamos con la parte final
-        strncpy(final, resto);
+        strcpy(final, resto);
         // nos quedamos con el tipo
-        strncpy(tipo, "d");
+        strcpy(tipo, "d");
     } else {  // si no tiene parte final, significa que estamos trabajando con un fichero
-        strncpy(inicial, (camino + 1));
-        strncpy(final, "");
-        strncpy(tipo, "f");
+        strcpy(inicial, (camino + 1));
+        strcpy(final, "");
+        strcpy(tipo, "f");
     }
 
 #if DEBUG

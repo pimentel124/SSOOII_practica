@@ -26,7 +26,7 @@ int main(int argc, char **argv) {
     // Rellenamos el buffer con 0's
     memset(buffer, 0, size);
 
-    // Leemos el inodo
+    
     int ninodo = atoi(argv[2]);  // Obtenemos el nº de inodo
 
     bytes_leidos = mi_read_f(ninodo, buffer, offset, size);
