@@ -49,6 +49,7 @@ int main(int argc, char **argv) {
             return -1;
         }
     }
+    
     // leer inodo
 
     if (leer_inodo(ninodo, &inodo) == -1) {
