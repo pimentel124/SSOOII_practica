@@ -34,9 +34,8 @@ int main(int argc, char **argv) {
 
     while (bytes_leidos > 0) {
         total_bytes_leidos += bytes_leidos;
-        // printf(" bytes leidos: %d\n", bytes_leidos); //DEBUG
+        //fprintf(stderr," bytes leidos: %d\n", total_bytes_leidos); //DEBUG
         write(1, buffer, bytes_leidos);  // Motrar resultados por pantalla
-
         memset(buffer, 0, size);
 
         offset += size;
@@ -49,7 +48,7 @@ int main(int argc, char **argv) {
             return -1;
         }
     }
-    
+
     // leer inodo
 
     if (leer_inodo(ninodo, &inodo) == -1) {

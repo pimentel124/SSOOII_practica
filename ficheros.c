@@ -114,7 +114,7 @@ int mi_read_f(unsigned int ninodo, void *buf_original, unsigned int offset, unsi
         return -1;
     }
     if ((inodo.permisos & 4) != 4) {  // Esta operación sólo está permitida cuando haya permiso de lectura
-                                      // Esta operación
+
         fprintf(stderr, "Error en mi_read_f()\nNo existen permisos de lectura, permisos del inodo: %d ||  %d: %s\n", inodo.permisos, errno, strerror(errno));
         return -1;
     }
@@ -140,8 +140,9 @@ int mi_read_f(unsigned int ninodo, void *buf_original, unsigned int offset, unsi
                 return -1;
             }
             memcpy(buf_original, buf_bloque + desp1, nbytes);
+            bytesleidos = nbytes;
         }
-        bytesleidos = nbytes;
+       
     } else if (primerBL < ultimoBL) {  // Más de un bloque involucrado
 
         if (nbfisico != -1) {
@@ -257,7 +258,7 @@ int mi_truncar_f(unsigned int ninodo, unsigned int nbytes) {
     }
 
     if (nbytes > inodo.tamEnBytesLog) {
-        fprintf(stderr, "Error en ficheros.c mi_truncar_f() --> %d: %s\n", errno, strerror(errno));
+        //fprintf(stderr, "Error en ficheros.c mi_truncar_f() nbytes --> %d: \n", nbytes);
         return -1;
     }
     // Calculamos nblogico
@@ -273,7 +274,7 @@ int mi_truncar_f(unsigned int ninodo, unsigned int nbytes) {
     inodo.ctime = time(NULL);
     inodo.tamEnBytesLog = nbytes;
     if (escribir_inodo(ninodo, inodo) == -1) {
-        fprintf(stderr, "Error en ficheros.c mi_truncar_f() --> %d: %s\n", errno, strerror(errno));
+        fprintf(stderr, "Error en ficheros.c mi_truncar_f() escribir inodo --> %d: %s\n", errno, strerror(errno));
         return -1;
     }
     return bloq_Liberados;
