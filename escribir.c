@@ -55,7 +55,7 @@ int main(int argc, char **argv) {
     }
 
     // Desmontar dispositivo virtual
-    if (bumount(argv[2]) == -1) {
+    if (bumount() == -1) {
         fprintf(stderr, "Escribir.c -- Error al desmontar\n");
         return -1;
     }
