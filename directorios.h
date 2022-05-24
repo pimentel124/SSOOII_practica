@@ -15,7 +15,7 @@
 struct entrada{
     char nombre[TAMNOMBRE];
     unsigned int ninodo;
-}
+};
 
 int extraer_camino(const char *camino, char *inicial, char *final, char *tipo);
 
