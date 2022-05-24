@@ -48,7 +48,7 @@ int mi_write_f(unsigned int ninodo, const void *buf_original, unsigned int offse
 
     } else if (primerBL < ultimoBL) {
         memcpy(buf_bloque + desp1, buf_original, BLOCKSIZE - desp1);
-        if (auxBytesWritten = bwrite(nbfisico, buf_bloque) == -1) {
+        if ((auxBytesWritten = bwrite(nbfisico, buf_bloque)) == -1) {
             return -1;
         }
 
@@ -56,7 +56,7 @@ int mi_write_f(unsigned int ninodo, const void *buf_original, unsigned int offse
 
         for (int i = primerBL + 1; i < ultimoBL; i++) {
             nbfisico = traducir_bloque_inodo(ninodo, i, 1);
-            if (auxBytesWritten = bwrite(nbfisico, buf_original + (BLOCKSIZE - desp1) + (i - primerBL - 1) * BLOCKSIZE) == -1) {
+            if ((auxBytesWritten = bwrite(nbfisico, buf_original + (BLOCKSIZE - desp1) + (i - primerBL - 1) * BLOCKSIZE)) == -1) {
                 return -1;
             }
             nBytesWrite += auxBytesWritten;
@@ -146,7 +146,8 @@ int mi_read_f(unsigned int ninodo, void *buf_original, unsigned int offset, unsi
 
         if (nbfisico != -1) {
             if (bread(nbfisico, buf_bloque) == -1) {
-                fprintf(stderr, "Error en lectura --> Error en ficheros_basico.c") return -1;
+                fprintf(stderr, "Error en lectura --> Error en ficheros_basico.c");
+                return -1;
             }
             memcpy(buf_original, buf_bloque + desp1, BLOCKSIZE - desp1);
         }
@@ -229,7 +230,8 @@ int mi_chmod_f(unsigned int ninodo, unsigned char permisos) {
     inodo.permisos = permisos;
     inodo.ctime = time(NULL);
     if (escribir_inodo(ninodo, inodo) == -1) {
-        fprintf(stderr, "Error en ficheros.c --> error al escribir inodo \n") return -1;
+        fprintf(stderr, "Error en ficheros.c --> error al escribir inodo \n");
+        return -1;
     }
     return 0;
 }

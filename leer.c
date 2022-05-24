@@ -45,7 +45,7 @@ int main(int argc, char **argv) {
 
         if (bytes_leidos == -1) {
             fprintf(stderr, "leer.c -- Error leyendo el inodo\n");
-            frprintf(stderr, "total_bytes_leidos: %d\n", total_bytes_leidos);
+            fprintf(stderr, "total_bytes_leidos: %d\n", total_bytes_leidos);
             return -1;
         }
     }
