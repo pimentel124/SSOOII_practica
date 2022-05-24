@@ -3,7 +3,7 @@
 int main(int argc, char const **argv){
     
     //Check syntax
-    if(argv[1] == NULL || argv[2] == NULL ){  
+    if(argv[1] == NULL || argv[2] == NULL || argv[3] == NULL){  
         fprintf(stderr,"Command syntax should be: permitir <nombre_dispositivo> <ninodo> <permisos>\n");
         return -1;
     }
