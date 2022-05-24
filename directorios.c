@@ -39,6 +39,8 @@ int extraer_camino(const char *camino, char *inicial, char *final, char *tipo) {
 
     #if DEBUG
     fprintf(stderr, "Camino: %s\nInicio: %s\nFinal: %s\nTipo: %s\n", camino, inicial, final, tipo);
+    #endif
+    return 0;
 }
 
 int buscar_entrada(const char *camino_parcial, unsigned int *p_inodo_dir, unsigned int *p_inodo,
