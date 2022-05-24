@@ -573,16 +573,16 @@ int traducir_bloque_inodo(unsigned int ninodo, unsigned int nblogico, unsigned c
 
                     // el bloque estará colgado directamente del inodo
                     inodo.punterosIndirectos[nRangoBL - 1] = ptr;
-#if DEBUG
+                    #if DEBUG
                     printf("[traducir_bloque_inodo()→ inodo.punterosIndirectos[%i] = %i (reservado BF %i para punteros_nivel%i)]\n", nRangoBL - 1, ptr, ptr, nivel_punteros);
-#endif
+                    #endif
 
                 } else {
                     // el bloque estara colgando de otro bloque de punteros
                     buffer[indice] = ptr;
-#if DEBUG
+                    #if DEBUG
                     printf("[traducir_bloque_inodo()→ buffer[%i] = %i (reservado BF %i para punteros_nivel%i)]\n", indice, ptr, ptr, nivel_punteros);
-#endif
+                    #endif
 
                     // se guarda el buffer de punteros modificado
                     if (bwrite(ptr_ant, buffer) == -1) {
@@ -725,6 +725,13 @@ int liberar_bloques_inodo(unsigned int nblogico, struct inodo *inodo) {
     unsigned char bufferAUX[BLOCKSIZE];
     memset(bufferAUX, 0, BLOCKSIZE);
 
+    // el fichero se encientra vacío
+    if ((inodo->tamEnBytesLog) == 0)
+    {
+        
+        return 0;
+    }
+
     // Obtenemos el último bloque lógico del inodo
     if (inodo->tamEnBytesLog % BLOCKSIZE == 0) {
         ultimoBL = ((inodo->tamEnBytesLog) / BLOCKSIZE) - 1;
@@ -742,7 +749,7 @@ int liberar_bloques_inodo(unsigned int nblogico, struct inodo *inodo) {
     for (nblog = nblogico; nblog <= ultimoBL; nblog++) {
 
         //indice :  0:D, 1:I0, 2:I1, 3:I2
-        nRangoBL = obtener_nrangoBL(&inodo, nblog, &ptr);
+        nRangoBL = obtener_nrangoBL(inodo, nblog, &ptr);
         if (nRangoBL < 0) {
             fprintf(stderr, "Error en ficheros_basico.c liberar_bloques_inodo() --> %d: %s\n", errno, strerror(errno));
             return -1;
@@ -751,7 +758,7 @@ int liberar_bloques_inodo(unsigned int nblogico, struct inodo *inodo) {
         while (ptr > 0 && nivel_punteros > 0) {
             
             indice = obtener_indice(nblog, nivel_punteros);
-            if ((indice < 0) || (nblog == nblogico)) {
+            if ((indice == 0) || (nblog == nblogico)) {
 
                 // únicamen se lee el dispositibo si no está ya cargado previamente en un buffer
                 if (bread(ptr, bloques_punteros[nivel_punteros-1]) == -1) {
