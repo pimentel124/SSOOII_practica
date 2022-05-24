@@ -6,6 +6,7 @@
  */
 #include "directorios.h"
 
+#define DEBUG 1
 //////////// NIVEL 7 //////////
 
 int extraer_camino(const char *camino, char *inicial, char *final, char *tipo) {
