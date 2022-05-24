@@ -11,6 +11,34 @@
 
 int extraer_camino(const char *camino, char *inicial, char *final, char *tipo) {
     return 0;
+
+    //Check syntax
+    if (argv[0] != '/'){
+        return -1;
+    }
+    if (camino == NULL || inicial == NULL || final == NULL || tipo == NULL) {
+        return -1;
+    }
+
+    //se obtiene el resto del camino
+    const char *resto = strchr((camino + 1), '/');
+
+    if (resto){
+        //nos quedamos con la parte inicial menos resto
+        strncpy(inicial, (camino+1), (strlen(camino) - (strlen(resto)-1)));
+        //nos quedamos con la parte final
+        strncpy(final, resto);
+        //nos quedamos con el tipo
+        strncpy(tipo, "d");
+    } else{ // si no tiene parte final, significa que estamos trabajando con un fichero
+        strncpy(inicial, (camino+1));
+        strncpy(final, "");
+        strncpy(tipo, "f");
+
+    }
+
+    #if DEBUG
+    fprintf(stderr, "Camino: %s\nInicio: %s\nFinal: %s\nTipo: %s\n", camino, inicial, final, tipo);
 }
 
 int buscar_entrada(const char *camino_parcial, unsigned int *p_inodo_dir, unsigned int *p_inodo,
