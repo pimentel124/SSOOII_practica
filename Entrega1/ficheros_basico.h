@@ -88,4 +88,4 @@ int traducir_bloque_inodo(unsigned int ninodo, unsigned int nblogico, unsigned c
 
 //Nivel 6
 int liberar_inodo(unsigned int ninodo);
-int liberar_bloques_inodo(unsigned int nblogico, struct inodo *inodo);
+int liberar_bloques_inodo(unsigned int primerBL, struct inodo *inodo);
