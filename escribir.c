@@ -5,7 +5,7 @@ int offsets[5] = {9000, 209000, 30725000, 409605000, 480000000};
 int main(int argc, char **argv) {
     // Consulta sintaxis correcta
     if (argv[1] == NULL || argv[2] == NULL || argv[3] == NULL) {
-        fprintf(stderr, "Sintaxis: escribir <nombre_dispositivo> <\"$(cat fichero)\"> <diferentes_diferentes_inodos>\nOffsets: 9000, 209000, 30725000, 409605000, 480000000\n Si diferentes_inodos=0 se reserva un solo inodo para todos los offsets\n");
+        fprintf(stderr, "Sintaxis: escribir <nombre_dispositivo> <\"$(cat fichero)\"> <diferentes_diferentes_inodos>\nOffsets: 9000, 209000, 30725000, 409605000, 480000000\nSi diferentes_inodos=0 se reserva un solo inodo para todos los offsets\n");
         return -1;
     }
 
@@ -36,7 +36,7 @@ int main(int argc, char **argv) {
 
         // Información inodo escrito
         struct STAT p_stat;
-        if (mi_stat_f(ninodo, &p_stat)) {
+        if (mi_stat_f(ninodo, &p_stat) == -1) {
             fprintf(stderr, "Escribir.c -- Error al obtener información del inodo\n");
             return -1;
         }
@@ -46,8 +46,7 @@ int main(int argc, char **argv) {
 
         // Si diferentes_inodos=0, se reserva un solo inodo para todos los offsets
         if (strcmp(argv[3], "0")) {
-            ninodo = reservar_inodo('f', 6);
-            if (ninodo == -1) {
+            if(ninodo = reservar_inodo('f', 6) == -1){
                 fprintf(stderr, "Escribir.c -- Error al reservar inodo\n");
                 return -1;
             }
