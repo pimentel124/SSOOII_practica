@@ -68,9 +68,15 @@ int bread(unsigned int nbloque, void *buf) {
         fprintf(stderr, "ERROR %d: %s\n", errno, strerror(errno));
         return -1;
     }
-    if ((bloqueLogico = read(descriptor, buf, BLOCKSIZE)) < 0) {
-        fprintf(stderr, "ERROR %d: %s\n", errno, strerror(errno));
-        return -1;
+    else
+    {
+        int bloqueLogico =read(descriptor, buf, BLOCKSIZE);
+        if (bloqueLogico == -1) {
+            fprintf(stderr, "ERROR %d: %s\n", errno, strerror(errno));
+            return -1;
+        }
+        return bloqueLogico;
     }
-    return bloqueLogico;
+    
 }
+
