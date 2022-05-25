@@ -45,7 +45,7 @@ int main(int argc, char **argv) {
     initAI();
     printf("InitAI completado.\n");
 
-    // Creaciòn del directorio raiz
+    // Creación del directorio raiz
     reservar_inodo('d', 7);
     printf("Creación directorio raíz completada.\n");
 

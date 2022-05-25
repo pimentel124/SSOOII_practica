@@ -1,5 +1,7 @@
 #include "ficheros_basico.h"
 
+#define DEBUG 1
+
 /**
  * @brief Calcula el tamaño en bloques necesario para el mapa de bits
  *
@@ -732,7 +734,7 @@ int liberar_bloques_inodo(unsigned int nblogico, struct inodo *inodo) {
     // Si el bloque lógico es menor que el último bloque lógico, liberar los bloques
 
 #if DEBUG
-    printf("[liberar_bloques_inodo()→ nblogico = %d, ultimoBL = %d]\n", primerBL, ultimoBL);
+    printf("[liberar_bloques_inodo()→ nblogico = %d, ultimoBL = %d]\n", nblogico, ultimoBL);
 #endif
 
     // Recorrido BLs
