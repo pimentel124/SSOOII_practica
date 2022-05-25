@@ -15,7 +15,7 @@ int main(int argc, char **argv) {
         return -1;
     };
 
-    unsigned int nbloques = atoi(argv[2]);
+    int nbloques = atoi(argv[2]);
     if (nbloques <= 0) {
         fprintf(stderr, "mi_mkfs.c -- El numero de bloques debe ser mayor que 0\n");
         return -1;
