@@ -210,34 +210,34 @@ int mi_creat(const char *camino, unsigned char permisos)
 {
     mi_waitSem();
 
-    unsigned int p_inodo_dir = 0;
-    unsigned int p_inodo = 0;
-    unsigned int p_entrada = 0;  
+    unsigned int p_inodo_dir, p_inodo, p_entrada;
+    p_inodo_dir = 0;
 
     int error = buscar_entrada(camino, &p_inodo_dir, &p_inodo, &p_entrada, 1, permisos);
     if (error < 0)
     {
         mostrar_error_buscar_entrada(error);
 
-        mi_signalSem(); // Niveles Semáforos
+        mi_signalSem(); 
 
         return -1;
     }
 
-    mi_signalSem(); // Niveles Semáforos
+    mi_signalSem(); 
     
     return 0;
 }
 
 int mi_dir(const char *camino, char *buffer, char tipo)
 {
-    unsigned int p_inodo_dir = 0;
-    unsigned int p_inodo = 0;
-    unsigned int p_entrada = 0;
+    unsigned int p_inodo_dir, p_inodo, p_entrada;
 
     char longitud[TAMFILA];
     struct entrada entrada;
     struct inodo inodo;
+    struct tm *tm;
+
+    p_inodo_dir = 0;
 
     int error = buscar_entrada(camino, &p_inodo_dir, &p_inodo, &p_entrada, 0, 6);
     if (error < 0)
@@ -316,7 +316,7 @@ int mi_dir(const char *camino, char *buffer, char tipo)
                 strcat(buffer, "\t");
 
                
-                struct tm *tm;
+                
                 char tmp[100];
                 tm = localtime(&inodoAux.mtime);
                 sprintf(tmp, "%d-%02d-%02d %02d:%02d:%02d", tm->tm_year + 1900, tm->tm_mon + 1, tm->tm_mday, tm->tm_hour, tm->tm_min, tm->tm_sec);
@@ -402,17 +402,20 @@ int mi_dir(const char *camino, char *buffer, char tipo)
 
 int mi_chmod(const char *camino, unsigned char permisos)
 {
-    unsigned int p_inodo_dir = 0;
-    unsigned int p_inodo = 0;
-    unsigned int p_entrada = 0;
+    unsigned int p_inodo_dir, p_inodo, p_entrada;
+    struct inodo inodo;
 
-    
-    int entrada = buscar_entrada(camino, &p_inodo_dir, &p_inodo, &p_entrada, 0, permisos);
-    if (entrada < 0)
+    p_inodo_dir = 0;
+
+    int err_entrada = buscar_entrada(camino, &p_inodo_dir, &p_inodo, &p_entrada, 0, permisos);
+    if (err_entrada < 0)
     {
-        mostrar_error_buscar_entrada(entrada);
+        mostrar_error_buscar_entrada(err_entrada);
         return -1;
     }
+
+    if (leer_inodo(p_inodo, &inodo) == -1)
+      return -1;
     
     return mi_chmod_f(p_inodo, permisos);
 }
@@ -422,15 +425,14 @@ int mi_chmod(const char *camino, unsigned char permisos)
 
 int mi_stat(const char *camino, struct STAT *p_stat)
 {
-    unsigned int p_inodo_dir = 0;
-    unsigned int p_inodo = 0;
-    unsigned int p_entrada = 0;
-
+    struct inodo inodo;
+    unsigned int p_inodo_dir, p_inodo, p_entrada;
+    p_inodo_dir = 0;
     
-    int entrada = buscar_entrada(camino, &p_inodo_dir, &p_inodo, &p_entrada, 0, 0);
-    if (entrada < 0)
+    int err_entrada = buscar_entrada(camino, &p_inodo_dir, &p_inodo, &p_entrada, 0, 0);
+    if (err_entrada < 0)
     {
-        mostrar_error_buscar_entrada(entrada);
+        mostrar_error_buscar_entrada(err_entrada);
         return -1;
     }
    
@@ -439,7 +441,11 @@ int mi_stat(const char *camino, struct STAT *p_stat)
         perror("Error en mi_stat_f, en mi_stat");
         return -1;
     }
-    return p_inodo;
+
+    if (leer_inodo(p_inodo, &inodo) == -1)
+      return -1;
+
+    return mi_stat_f(p_inodo, stat);
 }
 
 //////////////////NIVEL 9////////////////////////////
