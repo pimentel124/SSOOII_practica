@@ -15,7 +15,7 @@ int main(int argc, char **argv) {
         return -1;
     };
 
-    unsigned int nbloques = atoi(argv[2]);
+    int nbloques = atoi(argv[2]);
     if (nbloques <= 0) {
         fprintf(stderr, "mi_mkfs.c -- El numero de bloques debe ser mayor que 0\n");
         return -1;
@@ -45,7 +45,7 @@ int main(int argc, char **argv) {
     initAI();
     printf("InitAI completado.\n");
 
-    // Creaciòn del directorio raiz
+    // Creación del directorio raiz
     reservar_inodo('d', 7);
     printf("Creación directorio raíz completada.\n");
 

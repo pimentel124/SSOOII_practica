@@ -1,3 +1,9 @@
+/**
+ * @file leer.c
+ * @author Álvaro Pimentel, Andreu Marqués
+ *
+ */
+
 #include "ficheros.h"
 
 int main(int argc, char **argv) {
@@ -6,10 +12,10 @@ int main(int argc, char **argv) {
         fprintf(stderr, "Command syntax should be: leer <nombre_dispositivo> <nº inodo>\n");
         return -1;
     }
-    struct superbloque SB;
+
     struct inodo inodo;
 
-    int bytes_leidos, offset = 0, total_bytes_leidos = 0, size = 1500;
+    int bytes_leidos = 0, offset = 0, total_bytes_leidos = 0, size = 1500;
     char buffer[size];
 
     // Montar el disco
@@ -18,35 +24,31 @@ int main(int argc, char **argv) {
         return -1;
     }
 
-    if (bread(0, &SB) == -1) {
-        fprintf(stderr, "Error leyendo el superbloque\n");
+    // Rellenamos el buffer con 0's
+    if (memset(buffer, 0, size) == NULL) {
+        fprintf(stderr, "Error rellenando el buffer\n");
         return -1;
     }
 
-    // Rellenamos el buffer con 0's
-    memset(buffer, 0, size);
-
-    
     int ninodo = atoi(argv[2]);  // Obtenemos el nº de inodo
 
     bytes_leidos = mi_read_f(ninodo, buffer, offset, size);
-    // printf("FUERA bytes leidos: %d\n", bytes_leidos); //DEBUG
+    fprintf(stderr,"FUERA bytes leidos: %d\n", bytes_leidos); //DEBUG
 
     while (bytes_leidos > 0) {
-        total_bytes_leidos += bytes_leidos;
-        //fprintf(stderr," bytes leidos: %d\n", total_bytes_leidos); //DEBUG
         write(1, buffer, bytes_leidos);  // Motrar resultados por pantalla
-        memset(buffer, 0, size);
+        total_bytes_leidos += bytes_leidos;
+        //fprintf(stderr,"Total_leidos: %d\n", total_bytes_leidos); //DEBUG
 
         offset += size;
 
-        bytes_leidos = mi_read_f(ninodo, buffer, offset, size);
-
-        if (bytes_leidos == -1) {
-            fprintf(stderr, "leer.c -- Error leyendo el inodo\n");
-            fprintf(stderr, "total_bytes_leidos: %d\n", total_bytes_leidos);
+        if (memset(buffer, 0, size) == NULL) {
+            fprintf(stderr, "Error rellenando el buffer\n");
             return -1;
         }
+
+        bytes_leidos = mi_read_f(ninodo, buffer, offset, size);
+
     }
 
     // leer inodo
