@@ -46,7 +46,7 @@ int main(int argc, char **argv) {
 
         // Si diferentes_inodos=0, se reserva un solo inodo para todos los offsets
         if (strcmp(argv[3], "0")) {
-            if(ninodo = reservar_inodo('f', 6) == -1){
+            if((ninodo = reservar_inodo('f', 6)) == -1){
                 fprintf(stderr, "Escribir.c -- Error al reservar inodo\n");
                 return -1;
             }

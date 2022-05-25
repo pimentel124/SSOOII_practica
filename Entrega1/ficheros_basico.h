@@ -7,7 +7,7 @@
 #define INODOSIZE 128 // Tamaño del inodo
 #define posSB 0       // Posición superbloque
 #define tamSB 1       // Tamaño superbloque
-#define NPUNTEROS (BLOCKSIZE/sizeof(unsigned int)) //256
+#define NPUNTEROS (BLOCKSIZE / sizeof(unsigned int)) //256
 #define DIRECTOS 12
 #define INDIRECTOS0 (NPUNTEROS + DIRECTOS)	                           //268
 #define INDIRECTOS1 (NPUNTEROS * NPUNTEROS + INDIRECTOS0)               //65.804
@@ -64,30 +64,28 @@ struct inodo {     // comprobar que ocupa 128 bytes haciendo un sizeof(inodo)!!!
 
 // Calcula el tamaño en bloques necesario para el mapa de bits
 int tamMB (unsigned int nbloques);
-
 //Calcula el tamaño en bloques del array de inodos
 int tamAI (unsigned int ninodos);
-
-
 int initSB (unsigned int nbloques, unsigned int ninodos);
-
-
 int initMB();
-
-
 int initAI();
 
 
 //Nivel 3
 int escribir_bit(unsigned int nbloque, unsigned int bit);
-unsigned char leer_bit(unsigned int nbloque);
+char leer_bit(unsigned int nbloque);
 int reservar_bloque();
 int liberar_bloque(unsigned int nbloque);
 int escribir_inodo(unsigned int ninodo, struct inodo inodo);
 int leer_inodo(unsigned int ninodo, struct inodo *inodo);
-int reservar_inodo(unsigned char tipo, char permisos);
+int reservar_inodo(unsigned char tipo, unsigned char permisos);
 //Nivel 4
+int obtener_nrangoBL(struct inodo *inodo, unsigned int nblogico, unsigned int *ptr);
+int obtener_indice(unsigned int nblogico, int nivel_punteros);
 int traducir_bloque_inodo(unsigned int ninodo, unsigned int nblogico, unsigned char reservar);
+
+//Nivel 5
+
 //Nivel 6
 int liberar_inodo(unsigned int ninodo);
 int liberar_bloques_inodo(unsigned int nblogico, struct inodo *inodo);

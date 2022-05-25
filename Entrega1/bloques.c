@@ -68,7 +68,7 @@ int bwrite(unsigned int nbloque, const void *buf) {
  * @return int      Devuelve nbytes en caso de éxito o -1 en caso de error
  */
 int bread(unsigned int nbloque, void *buf) {
-    int bloqueLogico;
+
     if (lseek(descriptor, BLOCKSIZE * nbloque, SEEK_SET) == -1) {
         fprintf(stderr, "ERROR %d: %s\n", errno, strerror(errno));
         return -1;

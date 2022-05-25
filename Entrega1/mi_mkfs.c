@@ -23,7 +23,7 @@ int main(int argc, char **argv) {
 
     unsigned char buffer[BLOCKSIZE];  // el buffer de memoria empleado puede ser un array de tipo unsigned char del tamaño de un bloque
     memset(buffer, 0, BLOCKSIZE);     // Bloque vacío
-    printf("Creación bloques vacios, ahora escribo\n");
+    //printf("Creación bloques vacios, ahora escribo\n");
 
     // Inicializamos a 0s el fichero empleado como dispositivo virtual
     for (int i = 0; i < nbloques; i++) {
@@ -54,7 +54,7 @@ int main(int argc, char **argv) {
         return -1;
     };
     // Se desmonta el fichero
-    printf("FS desmontado.\n");
+    //printf("FS desmontado.\n");
 
     return 0;
 }
