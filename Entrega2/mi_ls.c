@@ -24,7 +24,8 @@ int main(int argc, char **argv){
         return -1;
     }
     
-    char buffer[5000];
+    struct superbloque SB;
+    char buffer[block_size];
     memset(buffer, 0, sizeof(buffer));
     int dir = mi_dir(camino, buffer, tipo);
     if(dir < 0){

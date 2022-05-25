@@ -1,9 +1,5 @@
 #include "directorios.h"
 
-// Programa que muestra la información acerca del inodo de un fichero o directorio, llamando a la función mi_stat().
-// Por parametros entrada "int argc, char **argv".
-// Variables usadas en la funcion "struct STAT stat, struct tm *ts, char atime[80], char ctime[80], char mtime[80], int ninodo".
-// Por parametros salida "0" caso SUCCESS "-1" caso FAILURE.
 int main(int argc, char **argv){
 	if(argc != 3){
 		fprintf(stderr, "Sintaxis: ./mi_stat <disco> </ruta>\n");
