@@ -1,3 +1,8 @@
+/**
+ * @file truncar.c
+ * @author Álvaro Pimentel, Andreu Marqués
+ *
+ */
 #include "ficheros.h"
 
 int main(int argc, char **argv) {

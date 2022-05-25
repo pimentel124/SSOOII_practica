@@ -1,3 +1,8 @@
+/**
+ * @file ficheros.h
+ * @author Álvaro Pimentel, Andreu Marqués
+ * @brief  Cabecera de los ficheros.c
+ */
 #include "ficheros_basico.h"
 // Nivel 6
 struct STAT

@@ -1,3 +1,8 @@
+/**
+ * @file permitir.c
+ * @author Álvaro Pimentel, Andreu Marqués
+ * @brief  Programa encargado de gestionar los cambios de permisos en los inodos 
+ */
 #include "ficheros.h"
 
 int main(int argc, char const **argv){

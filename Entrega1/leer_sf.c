@@ -1,3 +1,8 @@
+/**
+ * @file leer_sf.c
+ * @author Álvaro Pimentel, Andreu Marqués
+ *
+ */
 #include "ficheros_basico.h"
 
 #define DEBUG1 0

@@ -1,3 +1,8 @@
+/**
+ * @file escribir.c
+ * @author Álvaro Pimentel, Andreu Marqués
+ *
+ */
 #include "ficheros.h"
 
 int offsets[5] = {9000, 209000, 30725000, 409605000, 480000000};

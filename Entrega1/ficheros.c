@@ -1,3 +1,8 @@
+/**
+ * @file ficheros.c
+ * @author Álvaro Pimentel, Andreu Marqués
+ *
+ */
 #include "ficheros.h"
 
 /**

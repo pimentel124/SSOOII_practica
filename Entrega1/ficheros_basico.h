@@ -1,3 +1,8 @@
+/**
+ * @file ficheros_basico.h
+ * @author Álvaro Pimentel, Andreu Marqués
+ * @brief  Cabecera de los ficheros.c
+ */
 //////////////////Includes//////////////////
 #include <limits.h>   //Include para utilizar UINT_MAX (valor máximo del unsigned)
 #include <time.h>

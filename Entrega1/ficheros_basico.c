@@ -1,3 +1,8 @@
+/**
+ * @file ficheros_basico.c
+ * @author Álvaro Pimentel, Andreu Marqués
+ *
+ */
 #include "ficheros_basico.h"
 
 #define DEBUG3 0

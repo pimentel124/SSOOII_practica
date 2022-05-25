@@ -1,3 +1,8 @@
+/**
+ * @file mi_mkfs.c
+ * @author Álvaro Pimentel, Andreu Marqués
+ *
+ */
 #include "ficheros_basico.h"
 
 // Uso de mi_mkfs: ./mi_mkfs <nombre_dispositivo> <nbloques>

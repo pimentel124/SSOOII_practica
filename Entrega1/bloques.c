@@ -1,3 +1,8 @@
+/**
+ * @file bloques.c
+ * @author Álvaro Pimentel, Andreu Marqués
+ *
+ */
 #include "bloques.h"
 
 //----------------------------------------------------------------
