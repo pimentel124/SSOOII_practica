@@ -1,0 +1,316 @@
+Thu May 26 00:06:18 CEST 2022
+rm -rf *.o *~ mi_mkfs leer_sf leer escribir truncar permitir  disco* ext*
+gcc -c -g -Wall -std=gnu99 -o bloques.o -c bloques.c
+gcc -c -g -Wall -std=gnu99 -o mi_mkfs.o -c mi_mkfs.c
+gcc -c -g -Wall -std=gnu99 -o ficheros_basico.o -c ficheros_basico.c
+gcc -c -g -Wall -std=gnu99 -o leer_sf.o -c leer_sf.c
+gcc -c -g -Wall -std=gnu99 -o ficheros.o -c ficheros.c
+gcc -c -g -Wall -std=gnu99 -o escribir.o -c escribir.c
+gcc -c -g -Wall -std=gnu99 -o leer.o -c leer.c
+gcc -c -g -Wall -std=gnu99 -o truncar.o -c truncar.c
+gcc -c -g -Wall -std=gnu99 -o permitir.o -c permitir.c
+gcc  bloques.o ficheros_basico.o ficheros.o  mi_mkfs.o -o mi_mkfs
+gcc  bloques.o ficheros_basico.o ficheros.o  leer_sf.o -o leer_sf
+gcc  bloques.o ficheros_basico.o ficheros.o  leer.o -o leer
+gcc  bloques.o ficheros_basico.o ficheros.o  escribir.o -o escribir
+gcc  bloques.o ficheros_basico.o ficheros.o  truncar.o -o truncar
+gcc  bloques.o ficheros_basico.o ficheros.o  permitir.o -o permitir
+$ rm disco
+$ ./mi_mkfs disco 100000
+Escritura bloques vacíos completada.
+InitSB completado.
+InitMB completado.
+InitAI completado.
+Creación directorio raíz completada.
+################################################################################
+$ ./leer_sf disco
+DATOS DEL SUPERBLOQUE:
+posPrimerBloqueMB: 1
+posUltimoBloqueMB: 13
+posPrimerBloqueAI: 14
+posUltimoBloqueAI: 3138
+posPrimerBloqueDatos: 3139
+posUltimoBloqueDatos: 99999
+posInodoRaiz: 0
+posPrimerInodoLibre: 1
+cantBloquesLibres: 96861
+cantInodosLibres: 24999
+totBloques: 100000
+totInodos: 25000
+
+################################################################################
+$./escribir
+################################################################################
+$ ./escribir disco  ¿Qué es Lorem Ipsum? Lorem Ipsum es simplemente el texto de relleno de las imprentas y archivos de texto. Lorem Ipsum ha sido el texto de relleno estándar de las industrias desde el año 1500, cuando un impresor (N. del T. persona que se dedica a la imprenta) desconocido usó una galería de textos y los mezcló de tal manera que logró hacer un libro de textos especimen. No sólo sobrevivió 500 años, sino que tambien ingresó como texto de relleno en documentos electrónicos, quedando esencialmente igual al original. Fue popularizado en los 60s con la creación de las hojas "Letraset", las cuales contenian pasajes de Lorem Ipsum, y más recientemente con software de autoedición, como por ejemplo Aldus PageMaker, el cual incluye versiones de Lorem Ipsum. ¿Por qué lo usamos? Es un hecho establecido hace demasiado tiempo que un lector se distraerá con el contenido del texto de un sitio mientras que mira su diseño. El punto de usar Lorem Ipsum es que tiene una distribución más o menos normal de las letras, al contrario de usar textos como por ejemplo "Contenido aquí, contenido aquí". Estos textos hacen parecerlo un español que se puede leer. Muchos paquetes de autoedición y editores de páginas web usan el Lorem Ipsum como su texto por defecto, y al hacer una búsqueda de "Lorem Ipsum" va a dar por resultado muchos sitios web que usan este texto si se encuentran en estado de desarrollo. Muchas versiones han evolucionado a través de los años, algunas veces por accidente, otras veces a propósito (por ejemplo insertándole humor y cosas por el estilo). ¿De dónde viene? Al contrario del pensamiento popular, el texto de Lorem Ipsum no es simplemente texto aleatorio. Tiene sus raices en una pieza cl´sica de la literatura del Latin, que data del año 45 antes de Cristo, haciendo que este adquiera mas de 2000 años de antiguedad. Richard McClintock, un profesor de Latin de la Universidad de Hampden-Sydney en Virginia, encontró una de las palabras más oscuras de la lengua del latín, "consecteur", en un pasaje de Lorem Ipsum, y al seguir leyendo distintos textos del latín, descubrió la fuente indudable. Lorem Ipsum viene de las secciones 1.10.32 y 1.10.33 de "de Finnibus Bonorum et Malorum" (Los Extremos del Bien y El Mal) por Cicero, escrito en el año 45 antes de Cristo. Este libro es un tratado de teoría de éticas, muy popular durante el Renacimiento. La primera linea del Lorem Ipsum, "Lorem ipsum dolor sit amet..", viene de una linea en la sección 1.10.32 El trozo de texto estándar de Lorem Ipsum usado desde el año 1500 es reproducido debajo para aquellos interesados. Las secciones 1.10.32 y 1.10.33 de "de Finibus Bonorum et Malorum" por Cicero son también reproducidas en su forma original exacta, acompañadas por versiones en Inglés de la traducción realizada en 1914 por H. Rackham. ¿Dónde puedo conseguirlo? Hay muchas variaciones de los pasajes de Lorem Ipsum disponibles, pero la mayoría sufrió alteraciones en alguna manera, ya sea porque se le agregó humor, o palabras aleatorias que no parecen ni un poco creíbles. Si vas a utilizar un pasaje de Lorem Ipsum, necesitás estar seguro de que no hay nada avergonzante escondido en el medio del texto. Todos los generadores de Lorem Ipsum que se encuentran en Internet tienden a repetir trozos predefinidos cuando sea necesario, haciendo a este el único generador verdadero (válido) en la Internet. Usa un diccionario de mas de 200 palabras provenientes del latín, combinadas con estructuras muy útiles de sentencias, para generar texto de Lorem Ipsum que parezca razonable. Este Lorem Ipsum generado siempre estará libre de repeticiones, humor agregado o palabras no características del lenguaje, etc. 0
+#escribimos el texto2.txt en los offsets  9000, 209000, 30725000, 
+#409605000 y 480000000 de un mismo inodo
+Longitud del texto: 3751
+
+Nº inodo reservado: 1
+offset: 9000
+[traducir_bloque_inodo()→ inodo.punterosDirectos[8] = 3139 (reservado BF 3139 para BL8)]
+[traducir_bloque_inodo()→ inodo.punterosDirectos[9] = 3140 (reservado BF 3140 para BL9)]
+[traducir_bloque_inodo()→ inodo.punterosDirectos[10] = 3141 (reservado BF 3141 para BL10)]
+[traducir_bloque_inodo()→ inodo.punterosDirectos[11] = 3142 (reservado BF 3142 para BL11)]
+[traducir_bloque_inodo()→ inodo.punterosIndirectos[0] = 3143 (reservado BF 3143 para punteros_nivel1)]
+[traducir_bloque_inodo()→ inodo.punteros_nivel1[0] = 3144 (reservado BF 3144 para BL12)]
+Bytes escritos: 3751
+stat.tamEnBytesLog=12751
+stat.numBloquesOcupados=6
+
+Nº inodo reservado: 1
+offset: 209000
+[traducir_bloque_inodo()→ inodo.punteros_nivel1[192] = 3145 (reservado BF 3145 para BL204)]
+[traducir_bloque_inodo()→ inodo.punteros_nivel1[193] = 3146 (reservado BF 3146 para BL205)]
+[traducir_bloque_inodo()→ inodo.punteros_nivel1[194] = 3147 (reservado BF 3147 para BL206)]
+[traducir_bloque_inodo()→ inodo.punteros_nivel1[195] = 3148 (reservado BF 3148 para BL207)]
+Bytes escritos: 3751
+stat.tamEnBytesLog=212751
+stat.numBloquesOcupados=10
+
+Nº inodo reservado: 1
+offset: 30725000
+[traducir_bloque_inodo()→ inodo.punterosIndirectos[1] = 3149 (reservado BF 3149 para punteros_nivel2)]
+[traducir_bloque_inodo()→ inodo.punteros_nivel1[116] = 3150 (reservado BF 3150 para punteros_nivel1)]
+[traducir_bloque_inodo()→ inodo.punteros_nivel1[40] = 3151 (reservado BF 3151 para BL30004)]
+[traducir_bloque_inodo()→ inodo.punteros_nivel1[41] = 3152 (reservado BF 3152 para BL30005)]
+[traducir_bloque_inodo()→ inodo.punteros_nivel1[42] = 3153 (reservado BF 3153 para BL30006)]
+[traducir_bloque_inodo()→ inodo.punteros_nivel1[43] = 3154 (reservado BF 3154 para BL30007)]
+[traducir_bloque_inodo()→ inodo.punteros_nivel1[44] = 3155 (reservado BF 3155 para BL30008)]
+Bytes escritos: 3751
+stat.tamEnBytesLog=30728751
+stat.numBloquesOcupados=17
+
+Nº inodo reservado: 1
+offset: 409605000
+[traducir_bloque_inodo()→ inodo.punterosIndirectos[2] = 3156 (reservado BF 3156 para punteros_nivel3)]
+[traducir_bloque_inodo()→ inodo.punteros_nivel2[5] = 3157 (reservado BF 3157 para punteros_nivel2)]
+[traducir_bloque_inodo()→ inodo.punteros_nivel1[25] = 3158 (reservado BF 3158 para punteros_nivel1)]
+[traducir_bloque_inodo()→ inodo.punteros_nivel1[120] = 3159 (reservado BF 3159 para BL400004)]
+[traducir_bloque_inodo()→ inodo.punteros_nivel1[121] = 3160 (reservado BF 3160 para BL400005)]
+[traducir_bloque_inodo()→ inodo.punteros_nivel1[122] = 3161 (reservado BF 3161 para BL400006)]
+[traducir_bloque_inodo()→ inodo.punteros_nivel1[123] = 3162 (reservado BF 3162 para BL400007)]
+[traducir_bloque_inodo()→ inodo.punteros_nivel1[124] = 3163 (reservado BF 3163 para BL400008)]
+Bytes escritos: 3751
+stat.tamEnBytesLog=409608751
+stat.numBloquesOcupados=25
+
+Nº inodo reservado: 1
+offset: 480000000
+[traducir_bloque_inodo()→ inodo.punteros_nivel2[6] = 3164 (reservado BF 3164 para punteros_nivel2)]
+[traducir_bloque_inodo()→ inodo.punteros_nivel1[38] = 3165 (reservado BF 3165 para punteros_nivel1)]
+[traducir_bloque_inodo()→ inodo.punteros_nivel1[2] = 3166 (reservado BF 3166 para BL468750)]
+[traducir_bloque_inodo()→ inodo.punteros_nivel1[3] = 3167 (reservado BF 3167 para BL468751)]
+[traducir_bloque_inodo()→ inodo.punteros_nivel1[4] = 3168 (reservado BF 3168 para BL468752)]
+[traducir_bloque_inodo()→ inodo.punteros_nivel1[5] = 3169 (reservado BF 3169 para BL468753)]
+Bytes escritos: 3751
+stat.tamEnBytesLog=480003751
+stat.numBloquesOcupados=31
+
+################################################################################
+$ ./permitir disco 1 0
+#cambiamos permisos del inodo 1 a 0
+################################################################################
+$ ./leer disco 1
+#intentamos leer inodo 1 con permisos=0
+################################################################################
+$ ./permitir disco 1 6
+#cambiamos permisos del inodo 1 a 6
+################################################################################
+$ ./leer disco 1 > ext1.txt
+################################################################################
+$ ls -l ext1.txt
+-rwxrwxrwx 1 pimentel124 pimentel124 480003751 May 26 00:06 ext1.txt
+################################################################################
+$ ./leer_sf disco
+DATOS DEL SUPERBLOQUE:
+posPrimerBloqueMB: 1
+posUltimoBloqueMB: 13
+posPrimerBloqueAI: 14
+posUltimoBloqueAI: 3138
+posPrimerBloqueDatos: 3139
+posUltimoBloqueDatos: 99999
+posInodoRaiz: 0
+posPrimerInodoLibre: 2
+cantBloquesLibres: 96830
+cantInodosLibres: 24998
+totBloques: 100000
+totInodos: 25000
+
+################################################################################
+$ ./truncar disco 1 409605001
+[liberar_bloques_inodo()→ primerBL = 400005, ultimoBL = 468753]
+[liberar_bloques_inodo()→ liberados = 3160, ptr = 400005]
+[liberar_bloques_inodo()→ liberados = 3161, ptr = 400006]
+[liberar_bloques_inodo()→ liberados = 3162, ptr = 400007]
+[liberar_bloques_inodo()→ liberados = 3163, ptr = 400008]
+[liberar_bloques_inodo()→ liberados = 3166, ptr = 468750]
+[liberar_bloques_inodo()→ liberados = 3167, ptr = 468751]
+[liberar_bloques_inodo()→ liberados = 3168, ptr = 468752]
+[liberar_bloques_inodo()→ liberados = 3169, ptr = 468753]
+[liberar_bloques_inodo()→ liberado BF 3165 de punteros_nivel1 correspondiente al BL: 468753]
+[liberar_bloques_inodo()→ liberado BF 3164 de punteros_nivel2 correspondiente al BL: 468753]
+[liberar_bloques_inodo()→ total bloques liberados = 10]
+DATOS INODO: 1
+Tipo: f
+Permisos: 6
+atime: Thu 2022-05-26 00:06:46
+mtime: Thu 2022-05-26 00:06:46
+ctime: Thu 2022-05-26 00:06:46
+numlinks: 1
+################################################################################
+$ ./leer_sf disco
+DATOS DEL SUPERBLOQUE:
+posPrimerBloqueMB: 1
+posUltimoBloqueMB: 13
+posPrimerBloqueAI: 14
+posUltimoBloqueAI: 3138
+posPrimerBloqueDatos: 3139
+posUltimoBloqueDatos: 99999
+posInodoRaiz: 0
+posPrimerInodoLibre: 2
+cantBloquesLibres: 96840
+cantInodosLibres: 24998
+totBloques: 100000
+totInodos: 25000
+
+################################################################################
+$ ./truncar disco 1 30725003
+[liberar_bloques_inodo()→ primerBL = 30005, ultimoBL = 400004]
+[liberar_bloques_inodo()→ liberados = 3152, ptr = 30005]
+[liberar_bloques_inodo()→ liberados = 3153, ptr = 30006]
+[liberar_bloques_inodo()→ liberados = 3154, ptr = 30007]
+[liberar_bloques_inodo()→ liberados = 3155, ptr = 30008]
+[liberar_bloques_inodo()→ liberados = 3159, ptr = 400004]
+[liberar_bloques_inodo()→ liberado BF 3158 de punteros_nivel1 correspondiente al BL: 400004]
+[liberar_bloques_inodo()→ liberado BF 3157 de punteros_nivel2 correspondiente al BL: 400004]
+[liberar_bloques_inodo()→ liberado BF 3156 de punteros_nivel3 correspondiente al BL: 400004]
+[liberar_bloques_inodo()→ total bloques liberados = 8]
+DATOS INODO: 1
+Tipo: f
+Permisos: 6
+atime: Thu 2022-05-26 00:06:46
+mtime: Thu 2022-05-26 00:06:47
+ctime: Thu 2022-05-26 00:06:47
+numlinks: 1
+################################################################################
+$ ./leer_sf disco
+DATOS DEL SUPERBLOQUE:
+posPrimerBloqueMB: 1
+posUltimoBloqueMB: 13
+posPrimerBloqueAI: 14
+posUltimoBloqueAI: 3138
+posPrimerBloqueDatos: 3139
+posUltimoBloqueDatos: 99999
+posInodoRaiz: 0
+posPrimerInodoLibre: 2
+cantBloquesLibres: 96848
+cantInodosLibres: 24998
+totBloques: 100000
+totInodos: 25000
+
+################################################################################
+$ ./truncar disco 1 209008
+[liberar_bloques_inodo()→ primerBL = 205, ultimoBL = 30004]
+[liberar_bloques_inodo()→ liberados = 3146, ptr = 205]
+[liberar_bloques_inodo()→ liberados = 3147, ptr = 206]
+[liberar_bloques_inodo()→ liberados = 3148, ptr = 207]
+[liberar_bloques_inodo()→ liberados = 3151, ptr = 30004]
+[liberar_bloques_inodo()→ liberado BF 3150 de punteros_nivel1 correspondiente al BL: 30004]
+[liberar_bloques_inodo()→ liberado BF 3149 de punteros_nivel2 correspondiente al BL: 30004]
+[liberar_bloques_inodo()→ total bloques liberados = 6]
+DATOS INODO: 1
+Tipo: f
+Permisos: 6
+atime: Thu 2022-05-26 00:06:46
+mtime: Thu 2022-05-26 00:06:47
+ctime: Thu 2022-05-26 00:06:47
+numlinks: 1
+################################################################################
+$ ./leer_sf disco
+DATOS DEL SUPERBLOQUE:
+posPrimerBloqueMB: 1
+posUltimoBloqueMB: 13
+posPrimerBloqueAI: 14
+posUltimoBloqueAI: 3138
+posPrimerBloqueDatos: 3139
+posUltimoBloqueDatos: 99999
+posInodoRaiz: 0
+posPrimerInodoLibre: 2
+cantBloquesLibres: 96854
+cantInodosLibres: 24998
+totBloques: 100000
+totInodos: 25000
+
+################################################################################
+$ ./truncar disco 1 9005
+[liberar_bloques_inodo()→ primerBL = 9, ultimoBL = 204]
+[liberar_bloques_inodo()→ liberados = 3140, ptr = 9]
+[liberar_bloques_inodo()→ liberados = 3141, ptr = 10]
+[liberar_bloques_inodo()→ liberados = 3142, ptr = 11]
+[liberar_bloques_inodo()→ liberados = 3144, ptr = 12]
+[liberar_bloques_inodo()→ liberados = 3145, ptr = 204]
+[liberar_bloques_inodo()→ liberado BF 3143 de punteros_nivel1 correspondiente al BL: 204]
+[liberar_bloques_inodo()→ total bloques liberados = 6]
+DATOS INODO: 1
+Tipo: f
+Permisos: 6
+atime: Thu 2022-05-26 00:06:46
+mtime: Thu 2022-05-26 00:06:47
+ctime: Thu 2022-05-26 00:06:47
+numlinks: 1
+################################################################################
+$ ./leer disco 1 > ext1.txt
+################################################################################
+$ ls -l ext1.txt
+-rwxrwxrwx 1 pimentel124 pimentel124 9005 May 26 00:06 ext1.txt
+################################################################################
+$ cat ext1.txt
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+¿Qu
+################################################################################
+$ ./leer_sf disco
+DATOS DEL SUPERBLOQUE:
+posPrimerBloqueMB: 1
+posUltimoBloqueMB: 13
+posPrimerBloqueAI: 14
+posUltimoBloqueAI: 3138
+posPrimerBloqueDatos: 3139
+posUltimoBloqueDatos: 99999
+posInodoRaiz: 0
+posPrimerInodoLibre: 2
+cantBloquesLibres: 96860
+cantInodosLibres: 24998
+totBloques: 100000
+totInodos: 25000
+
+################################################################################
+$ ./truncar disco 1 0
+[liberar_bloques_inodo()→ primerBL = 0, ultimoBL = 8]
+[liberar_bloques_inodo()→ liberados = 3139, ptr = 8]
+[liberar_bloques_inodo()→ total bloques liberados = 1]
+DATOS INODO: 1
+Tipo: l
+Permisos: 6
+atime: Thu 2022-05-26 00:06:47
+mtime: Thu 2022-05-26 00:06:47
+ctime: Thu 2022-05-26 00:06:47
+numlinks: 1
+################################################################################
+$ ./leer_sf disco
+DATOS DEL SUPERBLOQUE:
+posPrimerBloqueMB: 1
+posUltimoBloqueMB: 13
+posPrimerBloqueAI: 14
+posUltimoBloqueAI: 3138
+posPrimerBloqueDatos: 3139
+posUltimoBloqueDatos: 99999
+posInodoRaiz: 0
+posPrimerInodoLibre: 1
+cantBloquesLibres: 96861
+cantInodosLibres: 24999
+totBloques: 100000
+totInodos: 25000
+
+################################################################################
+rm -rf *.o *~ mi_mkfs leer_sf leer escribir truncar permitir  disco* ext*
