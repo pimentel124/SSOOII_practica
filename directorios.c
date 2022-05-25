@@ -6,6 +6,9 @@
  */
 #include "directorios.h"
 
+struct UltimaEntrada UltimaEntradaLectura;
+struct UltimaEntrada UltimaEntradaEscritura;
+
 #define DEBUG 1
 //////////// NIVEL 7 //////////
 
@@ -208,7 +211,6 @@ void mostrar_error_buscar_entrada(int error){
 
 int mi_creat(const char *camino, unsigned char permisos)
 {
-    mi_waitSem();
 
     unsigned int p_inodo_dir, p_inodo, p_entrada;
     p_inodo_dir = 0;
@@ -218,12 +220,8 @@ int mi_creat(const char *camino, unsigned char permisos)
     {
         mostrar_error_buscar_entrada(error);
 
-        mi_signalSem(); 
-
         return -1;
     }
-
-    mi_signalSem(); 
     
     return 0;
 }
@@ -536,7 +534,6 @@ int mi_write(const char *camino, const void *buf, unsigned int offset, unsigned 
 
 int mi_link(const char *camino1, const char *camino2)
 {
-    mi_waitSem(); // Niveles Semáforos
 
     unsigned int p_inodo_dir1 = 0;
     unsigned int p_inodo1 = 0;
@@ -551,8 +548,6 @@ int mi_link(const char *camino1, const char *camino2)
     {
         mostrar_error_buscar_entrada(error);
 
-        mi_signalSem(); 
-
         return -1;
     }
 
@@ -562,7 +557,6 @@ int mi_link(const char *camino1, const char *camino2)
     {
         mostrar_error_buscar_entrada(error);   
         
-        mi_signalSem(); 
 
         return -1;
     }
@@ -573,7 +567,6 @@ int mi_link(const char *camino1, const char *camino2)
     {
         printf("Error (mi_link) . No se pudo leer el inodo\n");
 
-        mi_signalSem(); 
 
         return -1;
     }
@@ -582,8 +575,6 @@ int mi_link(const char *camino1, const char *camino2)
     if (inodo.tipo != 'f')
     {
         printf("Error (mi_link) no es un fichero\n");
-
-        mi_signalSem();
 
         return -1;
     }
@@ -594,7 +585,6 @@ int mi_link(const char *camino1, const char *camino2)
     {
 		printf("Error (mi_link) ejecutando mi_read_f()\n");
 
-        mi_signalSem(); 
         return -1;
 	}
 
@@ -609,7 +599,6 @@ int mi_link(const char *camino1, const char *camino2)
     {
 		printf("Error (mi_link) ejecutando mi_write_f()\n");
 
-        mi_signalSem(); 
 
         return -1;
 	}
@@ -617,8 +606,6 @@ int mi_link(const char *camino1, const char *camino2)
     if (leer_inodo(ninodo1, &inodo) == -1)
     {
         printf("Error (mi_link) . No se pudo leer el inodo\n");
-
-        mi_signalSem(); 
 
         return -1;
     }
@@ -633,12 +620,9 @@ int mi_link(const char *camino1, const char *camino2)
     {
         printf("Error (mi_link) en escribir el inodo\n");
 
-        mi_signalSem(); 
-
         return -1;
     }
     
-    mi_signalSem();
 
     return 0;
 }
@@ -646,8 +630,7 @@ int mi_link(const char *camino1, const char *camino2)
 
 
 int mi_unlink(const char *camino)
-{
-    mi_waitSem(); 
+{ 
     
     unsigned int p_inodo_dir = 0;
     unsigned int p_inodo = 0;
@@ -664,8 +647,6 @@ int mi_unlink(const char *camino)
         {
             printf("Error (mi_unlink) . No se pudo leer el inodo\n");
 
-            mi_signalSem(); 
-
             return -1;
         }
 	    
@@ -673,8 +654,6 @@ int mi_unlink(const char *camino)
         if (leer_inodo(p_inodo_dir, &inodo_1) == -1)
         {
             printf("Error (mi_unlink) . No se pudo leer el inodo\n");
-
-            mi_signalSem(); 
 
             return -1;
         }
@@ -686,7 +665,6 @@ int mi_unlink(const char *camino)
         {
 		    printf("Error: El directorio %s no está vacío\n",camino);
 
-            mi_signalSem(); 
 
 		    return -1;
 	    }
@@ -699,7 +677,6 @@ int mi_unlink(const char *camino)
             {
 			    printf("Error (mi_unlink) ejecutando mi_read_f()\n");
 
-                mi_signalSem(); 
 
                 return -1;
 		    }
@@ -708,7 +685,6 @@ int mi_unlink(const char *camino)
             {
 			    printf("Error (mi_unlink) ejecutando mi_write_f()\n");
 
-                mi_signalSem(); 
 
                 return -1;
 		    }
@@ -721,7 +697,6 @@ int mi_unlink(const char *camino)
         {
             printf("Error (mi_unlink) . No se pudo leer el inodo\n");
 
-            mi_signalSem(); 
 
             return -1;
         }
@@ -740,7 +715,6 @@ int mi_unlink(const char *camino)
             {
                 printf("Error (mi_unlink) . No se pudo escribir en el inodo\n");
 
-                mi_signalSem(); 
 
                 return -1;
             }
@@ -750,12 +724,10 @@ int mi_unlink(const char *camino)
     {
         mostrar_error_buscar_entrada(error);
 
-        mi_signalSem(); 
         
         return -1;
     }
     
-    mi_signalSem(); 
 
     return 0;
 }

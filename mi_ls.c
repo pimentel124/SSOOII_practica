@@ -24,7 +24,7 @@ int main(int argc, char **argv){
         return -1;
     }
     
-    char buffer[TAMBUFFER];
+    char buffer[5000];
     memset(buffer, 0, sizeof(buffer));
     int dir = mi_dir(camino, buffer, tipo);
     if(dir < 0){
