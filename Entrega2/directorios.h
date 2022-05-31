@@ -23,6 +23,7 @@
 
 struct entrada{
     char nombre[TAMNOMBRE];
+    #define TAMBUFFER (TAMFILA*1000)
     unsigned int ninodo;
 };
 
