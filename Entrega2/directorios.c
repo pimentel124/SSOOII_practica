@@ -452,7 +452,7 @@ int mi_stat(const char *camino, struct STAT *p_stat)
     if (leer_inodo(p_inodo, &inodo) == -1)
       return -1;
 
-    return mi_stat_f(p_inodo, stat);
+    return p_inodo;
 }
 
 //////////////////NIVEL 9////////////////////////////
@@ -664,102 +664,79 @@ int mi_link(const char *camino1, const char *camino2)
 int mi_unlink(const char *camino)
 { 
     
-    unsigned int p_inodo_dir = 0;
-    unsigned int p_inodo = 0;
-    unsigned int p_entrada = 0;
-    
-    
-    int error = buscar_entrada(camino, &p_inodo_dir, &p_inodo, &p_entrada, 0, 6);
-
-    if (error == 0)
-    {
-       
-	    struct inodo inodo_2;
-        if (leer_inodo(p_inodo, &inodo_2) == -1)
-        {
-            printf("Error (mi_unlink) . No se pudo leer el inodo\n");
-
-            return -1;
-        }
-	    
-    	struct inodo inodo_1;
-        if (leer_inodo(p_inodo_dir, &inodo_1) == -1)
-        {
-            printf("Error (mi_unlink) . No se pudo leer el inodo\n");
-
-            return -1;
-        }
-
-        
-	    int nentradas = inodo_1.tamEnBytesLog / sizeof (struct entrada);
-
-        if (inodo_2.tamEnBytesLog != 0 && inodo_2.tipo == 'd')
-        {
-		    printf("Error: El directorio %s no está vacío\n",camino);
-
-
-		    return -1;
-	    }
-
-        
-	    if (p_entrada != nentradas - 1){
-		    struct entrada entrada;
-		    
-		    if (mi_read_f (p_inodo_dir, &entrada, inodo_1.tamEnBytesLog - sizeof(struct entrada), sizeof(struct entrada)) == -1)
-            {
-			    printf("Error (mi_unlink) ejecutando mi_read_f()\n");
-
-
-                return -1;
-		    }
-
-		    if (mi_write_f (p_inodo_dir, &entrada, p_entrada * sizeof(struct entrada), sizeof(struct entrada)) == -1)
-            {
-			    printf("Error (mi_unlink) ejecutando mi_write_f()\n");
-
-
-                return -1;
-		    }
-        }
-
-	    
-	    mi_truncar_f (p_inodo_dir, inodo_1.tamEnBytesLog - sizeof (struct entrada));
-	    
-	    if (leer_inodo(p_inodo, &inodo_1) == -1)
-        {
-            printf("Error (mi_unlink) . No se pudo leer el inodo\n");
-
-
-            return -1;
-        }
-	    
-	    inodo_1.nlinks--;         
-    	
-	    if (inodo_1.nlinks == 0)
-        {
-		    liberar_inodo (p_inodo);
-	    }
-        else
-        {
-		    
-		    inodo_1.ctime = time (NULL);
-		    if (escribir_inodo (p_inodo, inodo_1) == -1)
-            {
-                printf("Error (mi_unlink) . No se pudo escribir en el inodo\n");
-
-
-                return -1;
-            }
-	    }
-	}  
-    else
-    {
-        mostrar_error_buscar_entrada(error);
-
-        
-        return -1;
-    }
-    
-
-    return 0;
+//mi_waitSem();
+   unsigned int p_inodo_dir, p_inodo, p_entrada;
+   int error, numentradas;
+   struct inodo inodo;
+   struct entrada entrada;
+   int tamEntrada = sizeof(struct entrada);
+   p_inodo_dir = 0;
+   if ((error = buscar_entrada(camino, &p_inodo_dir, &p_inodo, &p_entrada, 0, 0)) != EXIT_SUCCESS)
+   {
+      mostrar_error_buscar_entrada(error);
+      //mi_signalSem();
+      return -1;
+   }
+   if (leer_inodo(p_inodo, &inodo) == -1)
+   {
+      //mi_signalSem();
+      return -1;
+   }
+   if (inodo.tipo == 'd' && inodo.tamEnBytesLog > 0)
+   {
+      fprintf(stderr, "Error: El directorio %s no está vacío\n", camino);
+      //mi_signalSem();
+      return -1;
+   }
+   if (leer_inodo(p_inodo_dir, &inodo) == -1)
+   {
+      //mi_signalSem();
+      return -1;
+   }
+   //Eliminar la entrada en el directorio
+   numentradas = inodo.tamEnBytesLog / tamEntrada;
+   if (p_entrada != (numentradas - 1))
+   {
+      if (mi_read_f(p_inodo_dir, &entrada, (numentradas - 1) * tamEntrada, tamEntrada) == -1)
+      {
+         //mi_signalSem();
+         return -1;
+      }
+      if (mi_write_f(p_inodo_dir, &entrada, p_entrada * tamEntrada, tamEntrada) == -1)
+      {
+         //mi_signalSem();
+         return -1;
+      }
+   }
+   if (mi_truncar_f(p_inodo_dir, inodo.tamEnBytesLog - tamEntrada) == -1)
+   {
+      //mi_signalSem();
+      return -1;
+   }
+   if (leer_inodo(p_inodo, &inodo) == -1)
+   {
+      //mi_signalSem();
+      return -1;
+   }
+   inodo.nlinks--;
+   if (inodo.nlinks == 0)
+   {
+      //Eliminar el inodo
+      if (liberar_inodo(p_inodo) == -1)
+      {
+         //mi_signalSem();
+         return -1;
+      }
+   }
+   else
+   {
+      inodo.ctime = time(NULL);
+      if (escribir_inodo(p_inodo, inodo) == -1)
+      {
+         //mi_signalSem();
+         return -1;
+      }
+   }
+   //mi_signalSem();
+   return EXIT_SUCCESS;
 }

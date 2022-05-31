@@ -26,7 +26,7 @@ int mi_write_f(unsigned int ninodo, const void *buf_original, unsigned int offse
         return -1;
     }
     if ((inodo.permisos & 2) != 2) {
-        fprintf(stderr, "Error en mi_write_f(), no existen permisos de escritura\npermisos inodo: %d  ||  %d: %s\n", inodo.permisos, errno, strerror(errno));
+        fprintf(stderr, "Error en mi_write_f(), no existen permisos de escritura\npermisos inodo: %d  ||  %d: %s\n", (inodo.permisos & 2), errno, strerror(errno));
         return -1;
     }
     primerBL = offset / BLOCKSIZE;
