@@ -70,25 +70,22 @@ int initMB() {
     unsigned char buffer[BLOCKSIZE];
     memset(buffer, 0, BLOCKSIZE);
     // Leemos superbloque para obtener las posiciones de los datos
-    if (bread(0, &SB) == -1) {
+    if (bread(posSB, &SB) == -1) {
         fprintf(stderr, "Error en ficheros_basico.c initMB() --> %d: %s\n", errno, strerror(errno));
         return -1;
     }
 
     // El contenido del buffer se escribe en los bloques correspondientes al mapa de bits para inicializarlo
-    for (int i = SB.posPrimerBloqueMB; i < SB.posUltimoBloqueMB; i++) {
-        if (bwrite(i, buffer) == -1) {
+    for (int i = posSB; i < SB.posUltimoBloqueAI; i++) {
+        if (escribir_bit(i,1) == -1) {
             fprintf(stderr, "Error en ficheros_basico.c initMB() --> %d: %s\n", errno, strerror(errno));
             return -1;
         }
     }
 
-    // se pone a 1 todos los bits del mapa de bits que correspondan a los metadatos
-    for (int i = posSB; i < SB.posPrimerBloqueDatos; i++) {
-        // se reservan los bloques de metadatos
-        reservar_bloque();
-    }
-
+     SB.cantBloquesLibres -= SB.posUltimoBloqueAI + 1;
+    // Escribimos en los bloques correspondientes
+    if (bwrite(posSB,&SB) == -1)return -1; 
     return 0;
 }
 
