@@ -74,8 +74,14 @@ int initMB() {
         fprintf(stderr, "Error en ficheros_basico.c initMB() --> %d: %s\n", errno, strerror(errno));
         return -1;
     }
-
+    
     // El contenido del buffer se escribe en los bloques correspondientes al mapa de bits para inicializarlo
+    for (int i = SB.posPrimerBloqueMB; i <= SB.posUltimoBloqueMB; i++)
+   {
+      if (bwrite(i, buf) == -1)
+         return -1;
+   }
+    
     for (int i = posSB; i < SB.posUltimoBloqueAI; i++) {
         if (escribir_bit(i,1) == -1) {
             fprintf(stderr, "Error en ficheros_basico.c initMB() --> %d: %s\n", errno, strerror(errno));
