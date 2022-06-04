@@ -78,7 +78,7 @@ int initMB() {
     // El contenido del buffer se escribe en los bloques correspondientes al mapa de bits para inicializarlo
     for (int i = SB.posPrimerBloqueMB; i <= SB.posUltimoBloqueMB; i++)
    {
-      if (bwrite(i, buf) == -1)
+      if (bwrite(i, buffer) == -1)
          return -1;
    }
     

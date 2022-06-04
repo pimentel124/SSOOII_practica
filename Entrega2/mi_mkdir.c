@@ -7,7 +7,7 @@
 int main(int argc, char **argv){
     
     if (argc != 4) {
-        printf("Sintaxis: ./mi_mkdir <disco> <permisos> </ruta>\n");
+        fprintf(stderr, COLOR_ERROR "Error Sintaxis: ./mi_mkdir <disco> <permisos> </ruta>\n" COLOR_RESET);
         exit(1);
     }
     
@@ -26,7 +26,7 @@ int main(int argc, char **argv){
     
     int permisos = atoi(argv[2]);
     // Hay que comprobar que permisos sea un nº válido (0-7).
-    if(permisos<0 || permisos>7){
+    if(permisos < 0 || permisos > 7){
         printf("Error : modo inválido: <<%d>> \n",permisos);
         exit(1);
     }

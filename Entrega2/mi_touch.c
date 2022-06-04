@@ -7,7 +7,7 @@
 int main(int argc, char **argv){
     
     if (argc != 4) {
-        printf("Sintaxis: ./mi_touch <disco> <permisos> </ruta>\n");
+        fprintf(stderr, COLOR_ERROR "Error Sintaxis: ./mi_touch <disco> <permisos> </ruta>\n" COLOR_RESET);
         exit(1);
     }
     
