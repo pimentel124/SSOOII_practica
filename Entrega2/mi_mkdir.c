@@ -32,6 +32,7 @@ int main(int argc, char **argv){
     }
     
     if(mi_creat(camino,permisos)==-1){
+        fprintf(stderr, "ERROR: falló mi_creat\n");
         exit(1);
     }
         
