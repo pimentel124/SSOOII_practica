@@ -44,7 +44,7 @@ int main(int argc, char **argv)
             printf("Cambio a permisos: %d, Solo lectura y ejecucion", perm);
             break;
         case 6:
-            printf("Cambio a permisos: %d, Solo escritura y escritura", perm);
+            printf("Cambio a permisos: %d, Solo lectura y escritura", perm);
             break;
         case 7:
             printf("Cambio a permisos: %d, Todos los permisos", perm);
