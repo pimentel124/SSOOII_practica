@@ -1,103 +1,117 @@
 #include "simulacion.h"
-int acabados = 0;
-int main(int argc, char const *argv[])
-{
-   char nombre_dispositivo[1024], buf[80], camino[1024];
-   time_t now;
-   struct tm ts;
-   pid_t pid;
-   struct REGISTRO registro;
-   if (argc != 2)
-   {
-      fprintf(stderr, "Sintaxis:./simulacion <disco>\n");
-      exit(EXIT_FAILURE);
-   }
-   strcpy(nombre_dispositivo, argv[1]);
-   if (access(nombre_dispositivo, F_OK) == -1)
-   {
-      fprintf(stderr, "ERROR: No existe el archivo\n");
-      exit(EXIT_FAILURE);
-   }
-   bmount(nombre_dispositivo);
-   // Tiempo actual
-   time(&now);
-   // Formato de tiempo, "aaaammddhhmmss"
-   ts = *localtime(&now);
-   strftime(buf, sizeof(buf), "%Y%m%d%H%M%S", &ts);
-   sprintf(camino, "/simul_%s/", buf);
-   if (mi_creat(camino, 6) == -1)
-   {
-      fprintf(stderr, "ERROR: falló mi_creat\n");
-      bumount();
-   }
-   signal(SIGCHLD, reaper);
-   printf("*** Simulación de %d procesos realizando cada uno %d escrituras ***\n", NUMPROCESOS, NUMESCRITURAS);
-   printf("Directorio simulación: %s\n", camino);
-   for (int i = 1; i <= NUMPROCESOS; i++)
-   {
-      pid = fork();
-      if (pid == 0) // proceso hijo
-      {
-         char camino_fic[1024];
-         char buffer_directorio[1024];
-         int pid_directorio = getpid();
-         bmount(nombre_dispositivo);
-         memset(buffer_directorio, 0, strlen(buffer_directorio));
-         sprintf(buffer_directorio, "%sproceso_%d/", camino, pid_directorio);
-         if (mi_creat(buffer_directorio, 6) == -1)
-         {
-            bumount();
-            fprintf(stderr, "Error al crear el DIRECTORIO %s\n", buffer_directorio);
-         }
-         sprintf(camino_fic, "%sprueba.dat", buffer_directorio);
-         if (mi_creat(camino_fic, 6) == -1)
-         {
-            bumount();
-            fprintf(stderr, "Error al crear el fichero %s\n", camino_fic);
-         }
-         srand(time(NULL) + pid_directorio);
-         for (int j = 0; j < NUMESCRITURAS; j++)
-         {
-            registro.fecha = time(NULL);
-            registro.pid = pid_directorio;
-            registro.nEscritura = j + 1;
-            registro.nRegistro = rand() % REGMAX;
-            if (mi_write(camino_fic, &registro, registro.nRegistro * sizeof(struct REGISTRO), sizeof(struct REGISTRO)) == -1)
-            {
-               fprintf(stderr, "Error con el mi_write al fichero\n");
-            }
-            // fprintf(stderr, "[simulación.c → Escritura %d en %s]\n", j, camino_fic);
-            usleep(50000); //0,05 segundos
-         }
-         printf("Proceso %d: Completadas %d escrituras en %s\n", i, NUMESCRITURAS, camino_fic);
-         bumount();
-         exit(0);
-      }
-      usleep(200000); //0,2 segundos
-   }
-   while (acabados < NUMPROCESOS)
-   {
-      pause();
-   }
-   bumount();
-   printf("Total de procesos terminados: %d.\n", acabados);
-   exit(0);
+
+char dirPrueba[69];
+char camino[69];
+char camino2[200];
+static int acabados;
+
+void reaper(){
+  pid_t ended;
+  signal(SIGCHLD, reaper);
+  while ((ended=waitpid(-1, NULL, WNOHANG))>0) {
+    acabados++;
+    //Podemos testear qué procesos van acabando:
+    //fprintf(stderr, "acabado: %d total acabados: %d\n", ended, acabados);
+    //fflush(stderr);
+  }
 }
 
-
-/*	-Función: reaper.
-	-Descripción: Entierra a los procesos hijo zombie.
-	-Parámetros:
-	-Return:
+/* Funcion que ejecutra cada proceso y que se encargara de crear un directorio y un fichero
+* para cada proceso, guardando en el fichero las correspondientes escrituras (1-50).
 */
-void reaper()
-{
-   pid_t ended;
-   signal(SIGCHLD, reaper);
-   while ((ended = waitpid(-1, NULL, WNOHANG)) > 0)
-   {
-      acabados++;
-      //Podemos testear qué procesos van acabando:
-      //fprintf(stderr, "[simulación.c → Acabado proceso con PID %d, total acabados: %d]\n", ended, acabados);
-   }
+void proceso(int pid, char *disco){
+  char pidDirectorio[16];
+  struct REGISTRO registro;
+  if (bmount(disco) == -1) {
+    fprintf(stderr, "Error al montar el disco para el proceso con PID %d\n", pid);
+    bumount();
+    exit(1);
+  }
+  sprintf(pidDirectorio, "proceso_%d/", pid);
+  //fprintf(stderr, "proceso_%d/", pid);
+  memset(camino,0,sizeof(camino));
+  strcpy(camino, dirPrueba);
+  strcat(camino, pidDirectorio);
+  //Creamos el directorio del proceso
+  if(mi_creat(camino, '7') != 0){
+    bumount();
+    exit(1);
+  }
+  memset(camino2,0,sizeof(camino2));
+  strcpy(camino2, camino);
+  fprintf(stderr, "Completadas %d escrituras en %sprueba.dat\n", NUMESCRITURAS, camino);
+  fflush(stderr);
+  sprintf(camino2, "%sprueba.dat", camino2);
+
+  //fprintf(stderr, "**DEBUG - camino completo: %s**\n",camino2);
+
+  //Creamos pureba.dat
+  if(mi_creat(camino2, '6') != 0){
+    fprintf(stderr, "simulacion.c - Error en la creaciòn del fichero \"prueba.dat\"\n");
+    bumount();
+    exit(1);
+  }
+  //fprintf(stderr, "DEBUG - Creado fichero prueba.dat\n");
+
+  //Escribimos los registros
+  srand(time(NULL) + getpid());
+  for(int i = 0; i < NUMESCRITURAS; i++) {
+    registro.fecha = time(NULL);
+    registro.pid = getpid();
+    registro.nEscritura = i + 1;
+    registro.nRegistro =  rand() % REGMAX;
+    if(mi_write(camino2,&registro,registro.nRegistro*sizeof(struct REGISTRO),sizeof(struct REGISTRO)) < 0){
+      fprintf(stderr, "Fallo en la escritura en %s\n", camino2);
+      exit(1);
+    }
+    usleep(50000);
+  }
+  bumount();
+  exit(0);
+}
+
+int main (int argc, char **argv) {
+  char fech[16];
+  char f[8] = "/simul_";
+  struct tm *ts;
+  //Mostramos sintaxis correcta
+  if (argc != 2) {
+    fprintf(stderr, "Sintaxis correcta: ./simulacion <disco>\n");
+    return -1;
+  }
+  //Montamos el disco
+  if (bmount(argv[1]) == -1) return -1;
+  fprintf(stderr, "*** Simulación de %d procesos realizando cada uno %d escrituras ***\n", NUMPROCESOS, NUMESCRITURAS);
+  //Creamos el directorio
+  time_t t = time(NULL);
+  ts = localtime(&t);
+  memset(fech,0,sizeof(fech));
+  strftime(fech, sizeof(fech), "%Y%m%d%H%M%S/", ts);
+  memset(dirPrueba,0,sizeof(dirPrueba));
+  strcpy(dirPrueba, f);
+  strcat(dirPrueba, fech);
+  if(mi_creat(dirPrueba, '7') < 0) {
+    fprintf(stderr, "El directorio '%s' no se ha podido crear\n", dirPrueba);
+    bumount();
+    return -1;
+  } else {
+    fprintf(stderr, "Directorio simulación: %s\n", dirPrueba);
+  }
+  acabados = 0;
+  //Asignamos la función enterrador a la señal de finalización de un hijo
+  signal(SIGCHLD, reaper);
+  for (int i = 1; i <= NUMPROCESOS; i++) {
+    if(fork() == 0) {
+      proceso(getpid(), argv[1]);
+    }
+    //Esperamos 0.2 s
+    usleep(200000);
+  }
+  //Esperamos a que todos los procesos acaben
+  while (acabados < NUMPROCESOS) {
+    pause();
+  }
+  fprintf(stderr, "Total de procesos terminados: %d.\n", acabados);
+  bumount();
+  exit(0);
 }
