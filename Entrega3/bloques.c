@@ -4,9 +4,11 @@
  *
  */
 #include "bloques.h"
+#include "semaforo_mutex_posix.h"
 
 //----------------------------------------------------------------
 static int descriptor = 0;
+static sem_t *mutex;
 
 /**
  * @brief   Monta el sistema de ficheros en el dispositivo
@@ -25,6 +27,13 @@ int bmount(const char *camino) {
         fprintf(stderr, "ERROR %d: %s\n", errno, strerror(errno));
         return -1;
     }
+    if (!mutex) { // el semáforo es único en el sistema y sólo se ha de inicializar 1 vez (padre)
+       mutex = initSem(); 
+       if (mutex == SEM_FAILED) {
+           return -1;
+       }
+   }
+
     return descriptor;
 }
 
@@ -39,6 +48,7 @@ int bumount() {
         fprintf(stderr, "ERROR  %d: %s\n", errno, strerror(errno));
         return -1;
     }
+    deleteSem(); 
     return 0;
 }
 
@@ -91,5 +101,25 @@ int bread(unsigned int nbloque, void *buf) {
         return bloqueLogico;
     }
     
+}
+
+/*
+ * Semaforos
+*/
+
+static unsigned int inside_sc = 0;
+
+void mi_waitSem() {
+   if (!inside_sc) { // inside_sc==0
+       waitSem(mutex);
+   }
+   inside_sc++;
+}
+ 
+void mi_signalSem() {
+   inside_sc--;
+   if (!inside_sc) {
+       signalSem(mutex);
+   }
 }
 
