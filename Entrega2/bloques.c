@@ -16,6 +16,9 @@ static int descriptor = 0;
  */
 int bmount(const char *camino) {
     umask(000);
+    if(descriptor > 0) {
+        close(descriptor);
+    }
     descriptor = open(camino, O_RDWR | O_CREAT, 0666);
 
     if (descriptor == -1) {
@@ -33,7 +36,7 @@ int bmount(const char *camino) {
 int bumount() {
     descriptor = close(descriptor);
     if (descriptor == -1) {
-        fprintf(stderr, "ERROR %d: %s\n", errno, strerror(errno));
+        fprintf(stderr, "ERROR  %d: %s\n", errno, strerror(errno));
         return -1;
     }
     return 0;
