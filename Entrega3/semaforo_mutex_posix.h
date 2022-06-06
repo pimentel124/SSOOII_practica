@@ -1,3 +1,8 @@
+/**
+ * @file semaforo_mutex_posix.h
+ * @author Adelaida
+ * @brief Cabecera de semaforo_mutex_posix.c
+ */
 
 #include <stdlib.h>
 #include <sys/stat.h>

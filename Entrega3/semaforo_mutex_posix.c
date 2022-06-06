@@ -1,7 +1,7 @@
 /**
  * @file semaforo_mutex_posix.c
- * @author Álvaro Pimentel, Andreu Marqués
- *
+ * @author Adelaida
+ * @brief Implementación de semaforos mutex
  */
 #include "semaforo_mutex_posix.h"
 

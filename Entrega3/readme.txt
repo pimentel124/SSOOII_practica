@@ -30,6 +30,8 @@ Sintaxis específica de los programas empleados:
     + verificacion.c: verificacion <nombre_dispositivo> <directorio_simulacion>
 
 Observaciones adicionales:
+    + Documentacion:
+        - Para este proyecto se ha empleado el formato de documentacion Doxygen.
     + Mejoras:
         - Durante la inicialización del mapa de bits el la funcion InitMB() en el fichero "ficheros_basico.c" se emplea la función
         escribir_bit() para inicializar a 1 los bits correspondientes a los metadatos.

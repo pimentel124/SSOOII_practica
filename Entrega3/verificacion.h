@@ -1,3 +1,9 @@
+/**
+ * @file verificacion.h
+ * @author Álvaro Pimentel, Andreu Marqués
+ * @brief Cabecera de verificacion.c
+ */
+
 #include "simulacion.h"
 
 #define NUMENTRADAS 100

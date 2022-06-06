@@ -1,7 +1,7 @@
 /**
  * @file verificacion.c
  * @author Álvaro Pimentel, Andreu Marqués
- *
+ * @brief Programa encargado de verificar que el sistema de ficheros funciona correctamente
  */
 #include "verificacion.h"
 

@@ -1,3 +1,9 @@
+/**
+ * @file simulacion.h
+ * @author Álvaro Pimentel, Andreu Marqués
+ * @brief  Cabecera de simulacion.c
+ */
+
 #include "directorios.h"
 #include <sys/wait.h>
 #include <signal.h>

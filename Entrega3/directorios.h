@@ -1,7 +1,9 @@
+/**
+ * @file directorios.c
+ * @author Álvaro Pimentel, Andreu Marqués
+ * @brief Cabecera de directorios.c
+ */
 #include "ficheros.h"
-
-
-
 
 // Definición de errores
 #define ERROR_CAMINO_INCORRECTO -1
