@@ -1,7 +1,7 @@
 /**
  * @file mi_touch.c
  * @author Álvaro Pimentel, Andreu Marqués
- * @brief Programa encargado de crear un fichero mediante la función mi_creat()
+ * @brief  Programa encargado de crear un fichero mediante la función mi_creat()
  */
 #include "directorios.h"
 
