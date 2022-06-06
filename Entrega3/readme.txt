@@ -2,6 +2,12 @@ Miembros del grupo:
     + Andreu Marquès Valerià
     + Álvaro Pimentel Lorente
 
+Niveles:
+    [X] Nivel 1
+    [X] Nivel 2
+    [X] Nivel 3
+    [ ] Mejoras extras
+
 Sintaxis específica de los programas empleados:
     + mi_mkfs.c: mi_mkfs <nombre_dispositivo> <numero_de_bloques>
     + escribir.c: escribir <nombre_dispositivo> <\"$(cat fichero)\"> <diferentes_diferentes_inodos>
