@@ -62,10 +62,10 @@ int main(int argc, char **argv) {
     char *str;
     unsigned int pid;
 
-    char path_prueba[100];
+    char camino_prueba[100];
     unsigned int bytesRe = 1;
 
-    char date[80];
+    char fecha[80];
     struct tm *ts;
 
     struct INFORMACION info;
@@ -78,29 +78,33 @@ int main(int argc, char **argv) {
         memcpy(en, i * sizeof(struct entrada) + buffer_ent, sizeof(struct entrada));
         str = strchr(en->nombre, '_') + 1;
         pid = atoi(str);
-        strcpy(path_prueba, camino);
-        strcat(path_prueba, en->nombre);
+        strcpy(camino_prueba, camino);
+        strcat(camino_prueba, en->nombre);
         sprintf(aux, "/prueba.dat");
-        strcat(path_prueba, aux);
+        strcat(camino_prueba, aux);
 
         int j = 0;
         int contador = 0;
 
         while (bytesRe > 0 && contador < 50) {
             memset(&buffer_escrituras, 0, sizeof(buffer_escrituras));
-            // Leemos las 100 entradas que tiene que tener el fichero
-            if ((bytesRe = mi_read(path_prueba, &buffer_escrituras, j * sizeof(struct REGISTRO), sizeof(buffer_escrituras))) < 0) {
+            // Leemos una escritura
+            if ((bytesRe = mi_read(camino_prueba, &buffer_escrituras, j * sizeof(struct REGISTRO), sizeof(buffer_escrituras))) < 0) {
                 fprintf(stderr, "verificacion.c --> Lectura de entrada incorrecta.\n");
                 return -1;
             }
+			// En caso de que la escritura es valida entonces
             for (int n = 0; n < cant_registros_buffer_escrituras; n++) {
                 if (buffer_escrituras[n].pid == pid) {
-                    if (contador == 0) {
+                    if (contador == 0) {			 // Si se trata de la primera escritura validada entonces
+						// inicializar los registros significativos con los datos de esa escritura
                         info.PrimeraEscritura = buffer_escrituras[n];
                         info.UltimaEscritura = buffer_escrituras[n];
                         info.MayorPosicion = buffer_escrituras[n];
                         info.MenorPosicion = buffer_escrituras[n];
                     }
+
+					// Comparar el nº de escritura (para obtener la primera y la úlitma) y actualiza si es preciso.
                     if (buffer_escrituras[n].nEscritura < info.PrimeraEscritura.nEscritura) {
                         info.PrimeraEscritura = buffer_escrituras[n];
                     }
@@ -120,29 +124,30 @@ int main(int argc, char **argv) {
         }
         memset(buffer_esc, 0, BLOCKSIZE);
 
+		// Escribimos en el fichero informe.txt
         // NUMERO DE ESCRITURAS:
         sprintf(buffer_esc, "\nPID: %u\n", pid);
         sprintf(buffer_esc + strlen(buffer_esc), "Numero escrituras: %d\n", contador);
 
         // PRIMERA ESCRITURA
         ts = localtime(&info.PrimeraEscritura.fecha);
-        strftime(date, sizeof(date), "%a %Y-%m-%d %H:%M:%S", ts);
-        sprintf(buffer_esc + strlen(buffer_esc), "Primera Escritura\t%u\t%u\t%s\n", info.PrimeraEscritura.nEscritura, info.PrimeraEscritura.nRegistro, date);
+        strftime(fecha, sizeof(fecha), "%a %Y-%m-%d %H:%M:%S", ts);
+        sprintf(buffer_esc + strlen(buffer_esc), "Primera Escritura\t%u\t%u\t%s\n", info.PrimeraEscritura.nEscritura, info.PrimeraEscritura.nRegistro, fecha);
 
         // ULTIMA ESCRITURA
         ts = localtime(&info.UltimaEscritura.fecha);
-        strftime(date, sizeof(date), "%a %Y-%m-%d %H:%M:%S", ts);
-        sprintf(buffer_esc + strlen(buffer_esc), "Última Escritura\t%u\t%u\t%s\n", info.UltimaEscritura.nEscritura, info.UltimaEscritura.nRegistro, date);
+        strftime(fecha, sizeof(fecha), "%a %Y-%m-%d %H:%M:%S", ts);
+        sprintf(buffer_esc + strlen(buffer_esc), "Última Escritura\t%u\t%u\t%s\n", info.UltimaEscritura.nEscritura, info.UltimaEscritura.nRegistro, fecha);
 
         // MENOR POSICION
         ts = localtime(&info.MenorPosicion.fecha);
-        strftime(date, sizeof(date), "%a %Y-%m-%d %H:%M:%S", ts);
-        sprintf(buffer_esc + strlen(buffer_esc), "Menor Posición\t\t%u\t%u\t%s\n", info.MenorPosicion.nEscritura, info.MenorPosicion.nRegistro, date);
+        strftime(fecha, sizeof(fecha), "%a %Y-%m-%d %H:%M:%S", ts);
+        sprintf(buffer_esc + strlen(buffer_esc), "Menor Posición\t\t%u\t%u\t%s\n", info.MenorPosicion.nEscritura, info.MenorPosicion.nRegistro, fecha);
 
         // MAYOR POSICION
         ts = localtime(&info.MayorPosicion.fecha);
-        strftime(date, sizeof(date), "%a %Y-%m-%d %H:%M:%S", ts);
-        sprintf(buffer_esc + strlen(buffer_esc), "Mayor Posición\t\t%u\t%u\t%s\n", info.MayorPosicion.nEscritura, info.MayorPosicion.nRegistro, date);
+        strftime(fecha, sizeof(fecha), "%a %Y-%m-%d %H:%M:%S", ts);
+        sprintf(buffer_esc + strlen(buffer_esc), "Mayor Posición\t\t%u\t%u\t%s\n", info.MayorPosicion.nEscritura, info.MayorPosicion.nRegistro, fecha);
 
         // Escritura
         if (mi_write(camino_informe, buffer_esc, off_info, strlen(buffer_esc)) < 0) {
