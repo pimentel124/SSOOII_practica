@@ -53,8 +53,8 @@ int main(int argc, char **argv) {
 
     en = malloc(sizeof(struct entrada));
 
-    // Leemos las 100 entradas que tiene que tener el fichero
-    if (mi_read(camino, &buffer_ent, 0, sizeof(struct entrada) * NUMENTRADAS) < 0) {
+    // Leemos las 100 entradas que tiene que tener el fichero   //MEJORA 2
+    if (mi_read(camino, &buffer_ent, 0, sizeof(struct entrada) * NUMPROCESOS) < 0) {
         fprintf(stderr, "verificacion.c --> Lectura de entradas incorrecta\n");
         return -1;
     }
@@ -83,13 +83,13 @@ int main(int argc, char **argv) {
         sprintf(aux, "/prueba.dat");
         strcat(camino_prueba, aux);
 
-        int j = 0;
+        int total_reg_esc = 0;
         int contador = 0;
 
         while (bytesRe > 0 && contador < 50) {
             memset(&buffer_escrituras, 0, sizeof(buffer_escrituras));
             // Leemos una escritura
-            if ((bytesRe = mi_read(camino_prueba, &buffer_escrituras, j * sizeof(struct REGISTRO), sizeof(buffer_escrituras))) < 0) {
+            if ((bytesRe = mi_read(camino_prueba, &buffer_escrituras, total_reg_esc * sizeof(struct REGISTRO), sizeof(buffer_escrituras))) < 0) {
                 fprintf(stderr, "verificacion.c --> Lectura de entrada incorrecta.\n");
                 return -1;
             }
@@ -120,7 +120,7 @@ int main(int argc, char **argv) {
                     contador++;
                 }
             }
-            j += cant_registros_buffer_escrituras;
+            total_reg_esc += cant_registros_buffer_escrituras;
         }
         memset(buffer_esc, 0, BLOCKSIZE);
 
