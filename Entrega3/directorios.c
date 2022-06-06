@@ -496,6 +496,7 @@ int mi_read(const char *camino, void *buf, unsigned int offset, unsigned int nby
 
 int mi_write(const char *camino, const void *buf, unsigned int offset, unsigned int nbytes)
 {
+   mi_waitSem();
    unsigned int p_inodo_dir = 0, p_inodo = 0, p_entrada = 0;
    int encontrado = 0, error, resultado;
    //comprobar caché
@@ -514,6 +515,7 @@ int mi_write(const char *camino, const void *buf, unsigned int offset, unsigned 
       if ((error = buscar_entrada(camino, &p_inodo_dir, &p_inodo, &p_entrada, 0, 0)) != EXIT_SUCCESS)
       {
          mostrar_error_buscar_entrada(error);
+         mi_signalSem();
          return -1;
       }
       
@@ -542,6 +544,7 @@ int mi_write(const char *camino, const void *buf, unsigned int offset, unsigned 
    if (resultado == -1){
        resultado = 0;
    }
+   mi_signalSem();
    return resultado;
 }
 
@@ -614,7 +617,6 @@ int mi_link(const char *camino1, const char *camino2)
     {
 		printf("Error (mi_link) ejecutando mi_write_f()\n");
         mi_signalSem();
-
         return -1;
 	}
 

@@ -45,28 +45,28 @@ int mi_write_f(unsigned int ninodo, const void *buf_original, unsigned int offse
 
     if (primerBL == ultimoBL)  // Un solo bloque involucrado
     {
-        mi_waitSem();
+        //mi_waitSem();
         memcpy(buf_bloque + desp1, buf_original, nbytes);
         if (bwrite(nbfisico, buf_bloque) == -1) {
-            mi_signalSem();
+            //mi_signalSem();
             return -1;
         }
         nBytesWrite += nbytes;
 
     } else if (primerBL < ultimoBL) {
-        mi_waitSem();
+        //mi_waitSem();
         memcpy(buf_bloque + desp1, buf_original, BLOCKSIZE - desp1);
         if ((auxBytesWritten = bwrite(nbfisico, buf_bloque)) == -1) {
-            mi_signalSem();
+            //mi_signalSem();
             return -1;
         }
 
         nBytesWrite += auxBytesWritten - desp1;
-        mi_waitSem();
+        //mi_waitSem();
         for (int i = primerBL + 1; i < ultimoBL; i++) {
             nbfisico = traducir_bloque_inodo(ninodo, i, 1);
             if ((auxBytesWritten = bwrite(nbfisico, buf_original + (BLOCKSIZE - desp1) + (i - primerBL - 1) * BLOCKSIZE)) == -1) {
-                mi_signalSem();
+                //mi_signalSem();
                 return -1;
             }
             nBytesWrite += auxBytesWritten;
@@ -74,19 +74,19 @@ int mi_write_f(unsigned int ninodo, const void *buf_original, unsigned int offse
 
         nbfisico = traducir_bloque_inodo(ninodo, ultimoBL, 1);
         if (bread(nbfisico, buf_bloque) == -1) {
-            mi_signalSem();
+            //mi_signalSem();
             return -1;
         }
 
         memcpy(buf_bloque, buf_original + (nbytes - desp2 - 1), desp2 + 1);
         if (bwrite(nbfisico, buf_bloque) == -1) {
-            mi_signalSem();
+            //mi_signalSem();
             return -1;
         }
         nBytesWrite += desp2 + 1;
     }
     if (leer_inodo(ninodo, &inodo) == -1) {
-        mi_signalSem();
+        //mi_signalSem();
         return -1;
     }
 
@@ -96,14 +96,14 @@ int mi_write_f(unsigned int ninodo, const void *buf_original, unsigned int offse
     }
     inodo.mtime = time(NULL);
     if (escribir_inodo(ninodo, inodo) == -1) {
-        mi_signalSem();
+        //mi_signalSem();
         return -1;
     }
     if (nBytesWrite != nbytes) {
-        mi_signalSem();
+        //mi_signalSem();
         return -1;
     }
-    mi_signalSem();
+    //mi_signalSem();
     return nBytesWrite;
 }
 

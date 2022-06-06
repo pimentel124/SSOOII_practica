@@ -3,7 +3,7 @@
 char dirPrueba[69];
 char camino[69];
 char camino2[200];
-static int acabados;
+static int acabados=0;
 
 int main (int argc, char **argv) {
   char fech[16];
@@ -32,7 +32,6 @@ int main (int argc, char **argv) {
   } else {
     fprintf(stderr, "Directorio simulación: %s\n", dirPrueba);
   }
-  acabados = 0;
   //Asignamos la función enterrador a la señal de finalización de un hijo
   signal(SIGCHLD, reaper);
   for (int i = 1; i <= NUMPROCESOS; i++) {
@@ -89,7 +88,7 @@ void proceso(int pid, char *disco, int numProceso) {
   fflush(stderr);
   sprintf(camino2, "%sprueba.dat", camino2);
 
-  //fprintf(stderr, "**DEBUG - camino completo: %s**\n",camino2);
+  fprintf(stderr, "**DEBUG - camino completo: %s**\n",camino2);
 
   //Creamos pureba.dat
   if(mi_creat(camino2, '6') != 0){
