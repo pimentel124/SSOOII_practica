@@ -1,6 +1,6 @@
 #include "ficheros_basico.h"
 
-#define DEBUG 1
+#define DEBUG 0
 
 /**
  * @brief Calcula el tamaño en bloques necesario para el mapa de bits

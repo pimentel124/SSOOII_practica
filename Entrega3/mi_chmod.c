@@ -5,7 +5,7 @@
  */
 #include "directorios.h"
 
-#define DEBUG8 1  // Debug del nivel 8 para mostrar los cambios de permisos
+#define DEBUG8 0  // Debug del nivel 8 para mostrar los cambios de permisos
 
 int main(int argc, char **argv) {
     // Comprobamos sintaxis

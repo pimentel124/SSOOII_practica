@@ -13,7 +13,7 @@ int cursor = 0;
 #define DEBUG7 0
 #define DEBUG8 0
 #define DEBUG9 0
-#define DEBUG10 1
+#define DEBUG10 0
 
 //////////// NIVEL 7 /////////////
 

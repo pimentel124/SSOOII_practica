@@ -9,7 +9,7 @@
 struct UltimaEntrada UltimaEntradaLectura;
 struct UltimaEntrada UltimaEntradaEscritura;
 
-#define DEBUG 1
+#define DEBUG 0
 //////////// NIVEL 7 //////////
 
 int extraer_camino(const char *camino, char *inicial, char *final, char *tipo) {

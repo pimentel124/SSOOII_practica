@@ -93,7 +93,7 @@ void proceso(int pid, char *disco, int numProceso) {
     }
     memset(dir2, 0, sizeof(dir2));
     strcpy(dir2, dir);
-    fprintf(stderr, "Proceso %d: Completadas %d escrituras en %sprueba.dat\n", numProceso, NUMESCRITURAS, dir);
+    fprintf(stderr, "[Proceso %d: Completadas %d escrituras en %sprueba.dat\n]", numProceso, NUMESCRITURAS, dir);
     fflush(stderr);
     snprintf(dir2, sizeof(dir2), "%sprueba.dat", dir);
 

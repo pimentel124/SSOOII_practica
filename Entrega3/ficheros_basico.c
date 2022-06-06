@@ -7,7 +7,7 @@
 
 #define DEBUG3 0
 #define DEBUG4 0
-#define DEBUG6 1 
+#define DEBUG6 0 
 /**
  * @brief Calcula el tamaño en bloques necesario para el mapa de bits
  *

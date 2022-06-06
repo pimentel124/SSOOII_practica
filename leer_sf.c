@@ -1,6 +1,6 @@
 #include "directorios.h"
 
-#define DEBUG 1
+#define DEBUG 0
 #define DEBUG2 0
 
 struct superbloque SB;
