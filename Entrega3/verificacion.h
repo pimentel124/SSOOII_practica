@@ -1,6 +1,6 @@
 #include "simulacion.h"
 
-#define NENTRADAS 100
+#define NUMENTRADAS 100
 #define NUMREGISTROS 200
 
 struct INFORMACION

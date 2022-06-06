@@ -653,6 +653,7 @@ int traducir_bloque_inodo(unsigned int ninodo, unsigned int primerBL, unsigned c
 
 //////////////////NIVEL 6//////////////////
 
+
 /**
  * @brief Permite liberar un inodo reservado
  *
