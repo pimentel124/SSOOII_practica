@@ -20,14 +20,14 @@ int main(int argc, char **argv) {
     // Obtenimos las estadisticas de los ficheros del directorio
     struct STAT stat;
     if (mi_stat(argv[2], &stat) < 0) {
-        fprintf(stderr, "verificacion.c --> No se ha podido obtener STAT\n");
+        fprintf(stderr, COLOR_ERROR "Error verificacion.c: No se ha podido obtener STAT\n" COLOR_RESET);
         return -1;
     }
 
     // Si NENTRADAS != NUMPROCESOS
     // Calculamos el n. de entradas
     if (stat.tamEnBytesLog / sizeof(struct entrada) != NUMENTRADAS) {
-        fprintf(stderr, "verificacion.c --> No aparecen 100 entradas\n");
+        fprintf(stderr, COLOR_ERROR "Error verificacion.c: No aparecen 100 entradas\n");
         return -1;
     }
 
@@ -41,7 +41,7 @@ int main(int argc, char **argv) {
     strcat(camino_informe, aux);
 
     if (mi_creat(camino_informe, 6) < 0) {
-        fprintf(stderr, COLOR_ERROR "verificacion.c --> EL Informe no se ha podido crear\n" COLOR_RESET);
+        fprintf(stderr, COLOR_ERROR "Error verificacion.c:  El Informe no se ha podido crear\n" COLOR_RESET);
         return -1;
     }
 
@@ -90,7 +90,7 @@ int main(int argc, char **argv) {
             memset(&buffer_escrituras, 0, sizeof(buffer_escrituras));
             // Leemos una escritura
             if ((bytesRe = mi_read(camino_prueba, &buffer_escrituras, total_reg_esc * sizeof(struct REGISTRO), sizeof(buffer_escrituras))) < 0) {
-                fprintf(stderr, "verificacion.c --> Lectura de entrada incorrecta.\n");
+                fprintf(stderr, COLOR_ERROR "Error verificacion.c: Lectura de entrada incorrecta.\n" COLOR_RESET);
                 return -1;
             }
 			// En caso de que la escritura es valida entonces
@@ -157,5 +157,6 @@ int main(int argc, char **argv) {
         write(1, buffer_esc, strlen(buffer_esc));
         off_info += strlen(buffer_esc);
     }
-    bumount();
+	if (bumount() == -1) return -1;
+    return 0;
 }
