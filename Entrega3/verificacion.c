@@ -127,7 +127,7 @@ int main(int argc, char **argv) {
 		// Escribimos en el fichero informe.txt
         // NUMERO DE ESCRITURAS:
         sprintf(buffer_esc, "\nPID: %u\n", pid);
-        sprintf(buffer_esc + strlen(buffer_esc), "Numero escrituras: %d\n", contador);
+        sprintf(buffer_esc + strlen(buffer_esc), "Numero de escrituras: %d\n", contador);
 
         // PRIMERA ESCRITURA
         ts = localtime(&info.PrimeraEscritura.fecha);
