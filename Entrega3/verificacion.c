@@ -159,7 +159,7 @@ int main(int argc, char **argv) {
         off_info += strlen(buffer_esc);
 
 
-		fprint("[%u) %u escrituras validadas en %s", i+1, info.nEscrituras, camino_prueba)
+		fprint("[%u) %u escrituras validadas en %s]", i+1, info.nEscrituras, camino_prueba)
     }
     if (bumount() == -1) return -1;
     return 0;
