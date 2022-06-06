@@ -15,7 +15,7 @@ int main(int argc, char **argv) {
         fprintf(stderr, COLOR_ERROR "Error al montar el disco\n" COLOR_RESET);
         return -1;
     }
-    // fprintf(stderr, "dir_sim: %s\n", camino);
+    fprintf(stderr, "dir_sim: %s\n", camino);
 
     // Obtenimos las estadisticas de los ficheros del directorio
     struct STAT stat;
@@ -55,7 +55,7 @@ int main(int argc, char **argv) {
 
     // Leemos las 100 entradas que tiene que tener el fichero   //MEJORA 2
     if (mi_read(camino, &buffer_ent, 0, sizeof(struct entrada) * NUMPROCESOS) < 0) {
-        fprintf(stderr, "verificacion.c --> Lectura de entradas incorrecta\n");
+        fprintf(stderr, COLOR_ERROR "Error verificacion.c: Lectura de entradas incorrecta\n" COLOR_RESET);
         return -1;
     }
 
@@ -93,18 +93,18 @@ int main(int argc, char **argv) {
                 fprintf(stderr, COLOR_ERROR "Error verificacion.c: Lectura de entrada incorrecta.\n" COLOR_RESET);
                 return -1;
             }
-			// En caso de que la escritura es valida entonces
+            // En caso de que la escritura es valida entonces
             for (int n = 0; n < cant_registros_buffer_escrituras; n++) {
                 if (buffer_escrituras[n].pid == pid) {
-                    if (contador == 0) {			 // Si se trata de la primera escritura validada entonces
-						// inicializar los registros significativos con los datos de esa escritura
+                    if (contador == 0) {  // Si se trata de la primera escritura validada entonces
+                                          // inicializar los registros significativos con los datos de esa escritura
                         info.PrimeraEscritura = buffer_escrituras[n];
                         info.UltimaEscritura = buffer_escrituras[n];
                         info.MayorPosicion = buffer_escrituras[n];
                         info.MenorPosicion = buffer_escrituras[n];
                     }
 
-					// Comparar el nº de escritura (para obtener la primera y la úlitma) y actualiza si es preciso.
+                    // Comparar el nº de escritura (para obtener la primera y la úlitma) y actualiza si es preciso.
                     if (buffer_escrituras[n].nEscritura < info.PrimeraEscritura.nEscritura) {
                         info.PrimeraEscritura = buffer_escrituras[n];
                     }
@@ -121,10 +121,11 @@ int main(int argc, char **argv) {
                 }
             }
             total_reg_esc += cant_registros_buffer_escrituras;
+			
         }
         memset(buffer_esc, 0, BLOCKSIZE);
 
-		// Escribimos en el fichero informe.txt
+        // Escribimos en el fichero informe.txt
         // NUMERO DE ESCRITURAS:
         sprintf(buffer_esc, "\nPID: %u\n", pid);
         sprintf(buffer_esc + strlen(buffer_esc), "Numero de escrituras: %d\n", contador);
@@ -156,7 +157,10 @@ int main(int argc, char **argv) {
         }
         write(1, buffer_esc, strlen(buffer_esc));
         off_info += strlen(buffer_esc);
+
+
+		fprint("[%u) %u escrituras validadas en %s", i+1, info.nEscrituras, camino_prueba)
     }
-	if (bumount() == -1) return -1;
+    if (bumount() == -1) return -1;
     return 0;
 }
