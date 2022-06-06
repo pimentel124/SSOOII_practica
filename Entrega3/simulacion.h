@@ -12,3 +12,4 @@ struct REGISTRO
 	int nRegistro;  //Entero con el número del registro dentro del fichero (de 0 a REGMAX-1)
 };
 void reaper();
+void proceso(int pid, char *disco, int numProceso);
