@@ -31,8 +31,11 @@ Sintaxis específica de los programas empleados:
 
 Observaciones adicionales:
     + Documentacion:
-        - Para este proyecto se ha empleado el formato de documentacion Doxygen.
+        - Para este proyecto se ha empleado el formato de documentación Doxygen.
     + Mejoras:
         - Durante la inicialización del mapa de bits el la funcion InitMB() en el fichero "ficheros_basico.c" se emplea la función
         escribir_bit() para inicializar a 1 los bits correspondientes a los metadatos.
         - Durante la verificacion en verificacion.c se leer las 100 de golpe con una sola llamada a mi_read().
+    +Edicion de scripts:
+        - No se han modificado los comandos de los scripts de corrección
+        - Se ha añadido la línea "make clean" al final del script "scripte1.sh"
