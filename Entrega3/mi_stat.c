@@ -1,8 +1,14 @@
+/**
+ * @file mi_stat.c
+ * @author Álvaro Pimentel, Andreu Marqués
+ * @brief Programa (comando) que muestra la información acerca del inodo de un fichero o directorio,
+ * llamando a la función mi_stat() de la capa de directorios
+ */
 #include "directorios.h"
 
 int main(int argc, char **argv){
 	if(argc != 3){
-		fprintf(stderr, "Sintaxis: ./mi_stat <disco> </ruta>\n");
+		fprintf(stderr, COLOR_ERROR "Error Sintaxis: ./mi_stat <disco> </ruta>\n" COLOR_RESET);
 		return -1;
 	}
 	if(bmount(argv[1])==-1){

@@ -1,16 +1,20 @@
+/**
+ * @file mi_cat.c
+ * @author Álvaro Pimentel, Andreu Marqués
+ *
+ */
+
 #include "directorios.h"
 
 int main(int argc,char *argv[]){
 	
 	if(argc != 3){
-		printf("mi_cat, 6: Error en los argumentos.\n");
-		printf("El uso del programa es:\n \t.");
-		printf("/mi_cat [nombre del dispositivo] [camino]\n");
+		fprintf(stderr, COLOR_ERROR "Error Sintaxis: ./mi_cat <disco> </ruta>\n" COLOR_RESET);
 		exit(0);
 	}
 	
 	if(bmount(argv[1]) == -1){
-		printf("mi_cat, 13: Error al abrir el dispositivo: %s.\n", argv[1]);
+		fprintf(stderr, COLOR_ERROR "Error montando el disco\n" COLOR_RESET);
 		return -1;
 	}
 	

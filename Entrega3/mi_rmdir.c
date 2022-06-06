@@ -1,24 +1,32 @@
+/**
+ * @file mi_rmdir.c
+ * @author Álvaro Pimentel, Andreu Marqués
+ * @brief Programa encargado de eliminar un directorio mediante la funció mi_unlink()
+ */
 #include "directorios.h"
 
-// Programa que borra un directorio, llamando a la función mi_unlink().
-// Por parametros entrada "int argc, char **argv".
-// Variables usadas en la funcion " ".
-// Por parametros salida "0" caso SUCCESS "-1" caso FAILURE.
-int main(int argc, char **argv){
-	if(argc != 3)
-	{
-		printf("Sintaxis: ./mi_rmdir <disco> </ruta>\n");
-		return -1;
-	}
-	// Diferenciamos entre fichero y directorio
-    const char *camino = argv[2];
-    if(camino[strlen(camino)-1] != '/') 
-	{ 
-        fprintf(stderr, "Error (mi_rmdir.c): No es un directorio");
+int main(int argc, char **argv) {
+    if (argc != 3) {
+        fprintf(stderr, COLOR_ERROR "Error Sintaxis: ./mi_rmdir <disco> </ruta>\n" COLOR_RESET);
         return -1;
     }
-	bmount(argv[1]);
-	if(mi_unlink(argv[2]) < 0) return -1;
-	bumount();
-	return 0;
+    // Se comprueba que el parámetro pasado se trate de un directorio (tiene que empezar por /)
+    const char *camino = argv[2];
+    if (camino[strlen(camino) - 1] != '/') {
+        fprintf(stderr, COLOR_ERROR "Error: La ruta especificada no es un directorio" COLOR_RESET "\n");
+        return -1;
+    }
+
+    if (bmount(argv[1]) == -1) {
+        printf("Error (mi_rmdir.c) en montar el disco \n");
+        return -1;
+    }
+
+    if (mi_unlink(argv[2]) < 0) return -1;
+
+    if (bumount() == -1) {
+        printf("Error (mi_rmdir.c) en desmontar el disco \n");
+        return -1;
+    }
+    return 0;
 }

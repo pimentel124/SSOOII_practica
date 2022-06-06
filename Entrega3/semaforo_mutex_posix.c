@@ -1,3 +1,8 @@
+/**
+ * @file semaforo_mutex_posix.c
+ * @author Álvaro Pimentel, Andreu Marqués
+ *
+ */
 #include "semaforo_mutex_posix.h"
 
 /* Ejemplo de creación e inicialización de semáforos POSIX para MUTEX con "semáforos con nombre" (named) */

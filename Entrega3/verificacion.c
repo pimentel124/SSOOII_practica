@@ -1,9 +1,14 @@
+/**
+ * @file verificacion.c
+ * @author Álvaro Pimentel, Andreu Marqués
+ *
+ */
 #include "verificacion.h"
 
 int main (int argc, char **argv) {
 	// Comprobaciòn de sintaxis
 	if (argc != 3) {
-		fprintf(stderr, "uso: ./verificacion <disco> <directorio_simulacion>\n");
+		fprintf(stderr, COLOR_ERROR "Error Sintaxis: ./verificacion <disco> <directorio_simulacion>\n" COLOR_RESET);
 		return -1;
 	}
 	char *ruta = argv[1];
