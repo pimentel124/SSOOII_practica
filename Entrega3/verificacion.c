@@ -17,6 +17,7 @@ int main(int argc, char **argv) {
         fprintf(stderr, COLOR_ERROR "Error al montar el disco\n" COLOR_RESET);
         return -1;
     }
+    char *camino = argv[2];
     fprintf(stderr, "dir_sim: %s\n", camino);
 
     // Obtenimos las estadisticas de los ficheros del directorio

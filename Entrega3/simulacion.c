@@ -93,9 +93,9 @@ void proceso(int pid, char *disco, int numProceso) {
         bumount();
         exit(1);
     }
-    #if DEBUG12
+
     sprintf(pidDirectorio, "proceso_%d/", pid);
-    #endif
+    
     // fprintf(stderr, "proceso_%d/", pid);
     memset(dir, 0, sizeof(dir));
     strcpy(dir, dirPrueba);
@@ -107,12 +107,12 @@ void proceso(int pid, char *disco, int numProceso) {
     }
     memset(dir2, 0, sizeof(dir2));
     strcpy(dir2, dir);
-    #if DEBUG12
     fprintf(stderr, "[Proceso %d: Completadas %d escrituras en %sprueba.dat\n]", numProceso, NUMESCRITURAS, dir);
-    fflush(stderr);
-    snprintf(dir2, sizeof(dir2), "%sprueba.dat", dir);
+    #if DEBUG12
     fprintf(stderr, "**DEBUG - camino completo: %s**\n",dir2);
     #endif
+    fflush(stderr);
+    snprintf(dir2, sizeof(dir2), "%sprueba.dat", dir);
 
 
     // Se crea prueba.dat
