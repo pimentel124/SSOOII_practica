@@ -5,6 +5,9 @@
  */
 #include "simulacion.h"
 
+#define DEBUG12 0
+#define DEBUGREAPER 0
+
 char dirPrueba[100];
 char dir[100];
 char dir2[200];
@@ -23,7 +26,10 @@ int main(int argc, char **argv) {
     if (bmount(argv[1]) == -1) {
         return -1;
     }
+    #if DEBUG12
     fprintf(stderr, "*** Simulación de %d procesos realizando cada uno %d escrituras ***\n", NUMPROCESOS, NUMESCRITURAS);
+    #endif
+
     // Creamos directorio
     memset(dirPrueba, 0, sizeof(dirPrueba));
     strcpy(dirPrueba, nomIniFichero);
@@ -38,7 +44,9 @@ int main(int argc, char **argv) {
         bumount();
         return -1;
     } else {
+        #if DEBUG12
         fprintf(stderr, "Directorio simulación: %s\n", dirPrueba);
+        #endif
     }
 
     // asociar la señal SIGCHLD al enterrador
@@ -54,8 +62,12 @@ int main(int argc, char **argv) {
     while (acabados < NUMPROCESOS) {
         pause();
     }
+    #if DEBUG12
     fprintf(stderr, "Total de procesos terminados: %d.\n", acabados);
-    bumount();
+    #endif
+    if(bumount() == -1) {
+        return -1;
+    }
     exit(0);
 }
 
@@ -64,9 +76,9 @@ void reaper() {
     signal(SIGCHLD, reaper);
     while ((ended = waitpid(-1, NULL, WNOHANG)) > 0) {
         acabados++;
-        // Mostramos los procesos que han acabado:
-        // fprintf(stderr, "acabado: %d total acabados: %d\n", ended, acabados);
-        // fflush(stderr);
+        #if DEBUGREAPER
+        fprintf(stderr, "acabado: %d total acabados: %d\n", ended, acabados);
+        #endif
     }
 }
 
@@ -81,7 +93,9 @@ void proceso(int pid, char *disco, int numProceso) {
         bumount();
         exit(1);
     }
+    #if DEBUG12
     sprintf(pidDirectorio, "proceso_%d/", pid);
+    #endif
     // fprintf(stderr, "proceso_%d/", pid);
     memset(dir, 0, sizeof(dir));
     strcpy(dir, dirPrueba);
@@ -93,13 +107,15 @@ void proceso(int pid, char *disco, int numProceso) {
     }
     memset(dir2, 0, sizeof(dir2));
     strcpy(dir2, dir);
+    #if DEBUG12
     fprintf(stderr, "[Proceso %d: Completadas %d escrituras en %sprueba.dat\n]", numProceso, NUMESCRITURAS, dir);
     fflush(stderr);
     snprintf(dir2, sizeof(dir2), "%sprueba.dat", dir);
+    fprintf(stderr, "**DEBUG - camino completo: %s**\n",dir2);
+    #endif
 
-    // fprintf(stderr, "**DEBUG - camino completo: %s**\n",dir2);
 
-    // Creamos pureba.dat
+    // Se crea prueba.dat
     if (mi_creat(dir2, '6') != 0) {
         fprintf(stderr, "simulacion.c - Error en la creación del fichero \"prueba.dat\"\n");
         bumount();
@@ -119,6 +135,8 @@ void proceso(int pid, char *disco, int numProceso) {
         }
         usleep(50000);
     }
-    bumount();
+    if (bumount() == -1) {
+        exit(1);
+    }
     exit(0);
 }

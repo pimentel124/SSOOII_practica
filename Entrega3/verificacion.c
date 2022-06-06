@@ -5,6 +5,8 @@
  */
 #include "verificacion.h"
 
+#define DEBUG13 0
+
 int main(int argc, char **argv) {
     // Comprobaciòn de sintaxis
     if (argc != 3) {
@@ -31,8 +33,9 @@ int main(int argc, char **argv) {
         return -1;
     }
 
+    #if DEBUG13
     fprintf(stderr, "numentradas: %d NUMPROCESOS: %d\n", NUMENTRADAS, NUMPROCESOS);
-
+    #endif
     // Creación del fichero de informe "informe.txt" dentro del directorio de simulacion
     char camino_informe[100];
     char aux[15];
@@ -158,8 +161,9 @@ int main(int argc, char **argv) {
         write(1, buffer_esc, strlen(buffer_esc));
         off_info += strlen(buffer_esc);
 
-
+        #if DEBUG13
 		fprint("[%u) %u escrituras validadas en %s]", i+1, info.nEscrituras, camino_prueba)
+        #endif
     }
     if (bumount() == -1) return -1;
     return 0;
